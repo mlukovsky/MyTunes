@@ -1,0 +1,134 @@
+<% layout('layouts/boilerplate') %>
+
+    <div class="row">
+        <div class="col-6 text-center">
+
+            <h1>
+                <%= artistData.name %>
+            </h1>
+            <img src="<%= artistData.images[0].url %>" alt="" class="img-fluid" id="artist-profile-img">
+            <small>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Genres:
+                        <% for(let genre of artistData.genres){ %>
+                            <div>
+                                <%= genre%>
+                            </div>
+                            <% } %>
+                    </li>
+                    <li class="list-group-item">Popularity: <%= artistData.popularity %>
+                    </li>
+                </ul>
+            </small>
+            <form action="/addArtistToProfile" method="post">
+                <input type="hidden" name="name" value="<%= artistData.name %>">
+                <input type="hidden" name="id" value="<%= artistData.id %>">
+                <input type="hidden" name="url" value="/artist/<%= artistData.id %>">
+                <button type="submit" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                        height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                    </svg> Add To Favorites</button>
+            </form>
+            <h3 class="mt-3">Related Artists</h3>
+            <div class="mb-5">
+                <% for(let i=0; i < 8; i++){ %>
+                    <span class="mb-3">
+                        <a href="/artist/<%= relatedArtists.artists[i].id %>" target="_blank">
+                            <p class="h5">
+                                <%= relatedArtists.artists[i].name %>
+                            </p>
+                            <img src="<%= relatedArtists.artists[i].images[0].url %>" alt="" id="related-artist-img">
+                        </a>
+                    </span>
+                    <% } %>
+
+            </div>
+        </div>
+        <div class="col-6 text-center">
+            <h3>Top Tracks</h3>
+            <ul class="list-group list-group-flush">
+                <% for(let track of topTracks.tracks) {%>
+                    <li class="list-group-item">
+                        <span class="d-flex justify-content-start">
+                            <a href="/song/<%= track.id %>">
+                                <span><img src="<%= track.album.images[0].url %>" alt="" id="related-artist-img"></span>
+                                <span>
+                                    <%= track.name %>
+                                </span>
+                            </a>
+                        </span>
+                        <span class="d-flex justify-content-end">
+                            <a href="<%= track.external_urls.spotify %>" target="_blank">Listen on
+                                Spotify <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    fill="currentColor" class="bi bi-spotify mx-2" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.669 11.538a.498.498 0 0 1-.686.165c-1.879-1.147-4.243-1.407-7.028-.77a.499.499 0 0 1-.222-.973c3.048-.696 5.662-.397 7.77.892a.5.5 0 0 1 .166.686zm.979-2.178a.624.624 0 0 1-.858.205c-2.15-1.321-5.428-1.704-7.972-.932a.625.625 0 0 1-.362-1.194c2.905-.881 6.517-.454 8.986 1.063a.624.624 0 0 1 .206.858zm.084-2.268C10.154 5.56 5.9 5.419 3.438 6.166a.748.748 0 1 1-.434-1.432c2.825-.857 7.523-.692 10.492 1.07a.747.747 0 1 1-.764 1.288z" />
+                                </svg></a>
+                        </span>
+                    </li>
+
+                    <% } %>
+
+            </ul>
+        </div>
+        <div class="row">
+            <!-- Start reviews -->
+            <div class="col-6 text-start justify-content-start">
+                <h3>Write a Review</h3>
+                <form action="/artist/<%= artistData.id %>/reviews" method="post" class="validated-form mb-3"
+                    novalidate>
+                    <div class="mb-3">
+                        <label class="form-label" for="rating">Rating</label>
+                        <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="body">Review</label>
+                        <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3"
+                            required></textarea>
+                        <div class="valid-feedback">Looks Good!</div>
+                    </div>
+                    <input type="hidden" name="artist[name]" value="<%= artistData.name %>">
+                    <input type="hidden" name="artist[id]" value="<%= artistData.id %>">
+                    <button class="btn btn-success">Add Review</button>
+                </form>
+                <% for(let review of reviews){ %>
+                    <div class="card mb-3">
+                        <div class="mb-3 card-body">
+                            <h5 class="card-title">
+                                <%= review.author.username %>
+                            </h5>
+                            <p>
+                                Rating: <%= review.rating %>
+                            </p>
+                            <p class="card-text">
+                                Review: <%= review.body %>
+                            </p>
+                        </div>
+                    </div>
+                    <% } %>
+            </div>
+            <!-- End reviews -->
+            <div class="col-6 text-end justify-content-end">
+                <h3 class="mb-3">Albums</h3>
+                <% for(let i=0; i < albums.items.length; i++){ %>
+                    <% if(i>0 && albums.items[i-1].name === albums.items[i].name) { %>
+                        <% continue %>
+                            <% } %>
+                                <div class="text-end">
+                                    <a href="/album/<%= albums.items[i].id %>">
+                                        <p class="h4 text-muted">
+                                            <%= albums.items[i].name %>
+                                        </p>
+                                        <span>
+                                            <img src="<%= albums.items[i].images[0].url %>" alt="" class="img-fluid"
+                                                id="artist-profile-album-img">
+                                        </span>
+                                    </a>
+                                </div>
+
+                                <% } %>
+            </div>
+        </div>
+    </div>

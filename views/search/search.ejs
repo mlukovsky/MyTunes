@@ -1,0 +1,34 @@
+<% layout('layouts/boilerplate') %>
+    <h1 class="display-2 text-center">Search</h1>
+
+    <form action="/searchAuthd" method="post" novalidate>
+        <div>
+            <label class="form-label" for="song">Song</label>
+        </div>
+        <div class="mb-3">
+            <input class="form-control" type="text" name="song" id="song">
+        </div>
+        <div>
+            <label class="form-label" for="artist">Artist</label>
+        </div>
+        <div class="mb-3">
+            <input class="form-control" type="text" name="artist" id="artist">
+        </div>
+        <div>
+            <label class="form-label" for="album">Album</label>
+        </div>
+        <div class="mb-3">
+            <input class="form-control" type="text" name="album" id="album">
+        </div>
+        <button class="btn btn-success">Search</button>
+    </form>
+
+    <% if(results.titles.length) { %>
+        <% for(let result of results.titles){ %>
+            <p>
+                <%= result %>
+            </p>
+            <% } %>
+                <% results.titles.clear()%>
+                    <% results.ids.length=0 %>
+                        <% } %>

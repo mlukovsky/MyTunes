@@ -1,0 +1,93 @@
+<% layout('layouts/boilerplate') %>
+
+
+    <div class="row">
+        <div class="col-6">
+            <div class="card mb-3">
+                <a href="<%=data.external_urls.spotify%>" target="_blank">
+                    <img class="card-img-top" src="<%= data.images[0].url %>" alt="">
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            <%= data.name %>
+                        </h3>
+                </a>
+                <h6 class="card-subtitle">
+                    <% for(let artist of data.artists) { %>
+                        <a href="/artist/<%= artist.id %>">
+                            <%= artist.name %>
+                        </a>
+                        <% } %>
+                </h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <small class="text-center">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    Release Date: <%= data.release_date %>
+                </li>
+                <li class="list-group-item">Popularity: <%= data.popularity %>
+                </li>
+            </ul>
+        </small>
+        <div class="btn-group">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                data-bs-auto-close="false" aria-expanded="false">
+                View Tracks (<%= data.total_tracks %>)
+            </button>
+            <ul class="dropdown-menu" id="info-list">
+                <% for(let track of data.tracks.items) { %>
+                    <li><a class="dropdown-item" href="/song/<%= track.id %>">
+                            <%= track.name %>
+                        </a></li>
+                    <% } %>
+            </ul>
+        </div>
+        <div class="text-center">
+            <form action="/addAlbumToProfile" method="post" class="mb-3">
+                <input type="hidden" name="title" value="<%= data.name %>">
+                <input type="hidden" name="artist" value="<%= data.artists[0].name %>">
+                <input type="hidden" name="id" value="<%= data.id %>">
+                <input type="hidden" name="url" value="/album/<%= data.id %>">
+                <button type="submit" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                        height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                    </svg> Add To Favorites</button>
+            </form>
+        </div>
+
+        <!-- Reviews -->
+        <h3>Write a Review</h3>
+        <form action="/album/<%= data.id %>/reviews" method="post" class="validated-form mb-3" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="rating">Rating</label>
+                <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="body">Review</label>
+                <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
+                <div class="valid-feedback">Looks Good!</div>
+            </div>
+            <input type="hidden" name="album[title]" value="<%= data.name %>">
+            <input type="hidden" name="album[artist]" value="<%= data.artists[0].name %>">
+            <input type="hidden" name="album[id]" value="<%= data.id %>">
+            <button class="btn btn-success">Add Review</button>
+        </form>
+        <% for(let review of reviews){ %>
+            <div class="card mb-3">
+                <div class="mb-3 card-body">
+                    <h5 class="card-title">
+                        <%= review.author.username %>
+                    </h5>
+                    <p>
+                        Rating: <%= review.rating %>
+                    </p>
+                    <p class="card-text">
+                        Review: <%= review.body %>
+                    </p>
+                </div>
+            </div>
+            <% } %>
+    </div>

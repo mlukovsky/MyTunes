@@ -1,0 +1,55 @@
+.nav-link {
+    color: #edf2f4;
+}
+
+#connect-button {
+    font-size: 1.5em;
+    background-color: #2b9348;
+    color: white;
+}
+
+#connect-button svg {
+    height: 1em;
+    width: 1em
+}
+
+/* #nav-dropdown-btn {
+    border-radius: 20%;
+} */
+
+a {
+    text-decoration: none;
+    color: black
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#info-list li {
+    font-size: 0.85em;
+}
+
+#related-artist-img {
+    height: 64px;
+    width: 64px;
+}
+
+#artist-profile-img {
+    height: 320px;
+    width: 280px;
+}
+
+#artist-profile-album-img {
+    height: 200px;
+    width: 200px;
+}
+
+
+#add-fav-form p {
+    display: inline-block;
+}
+
+.nav-tabs button {
+    color: black;
+}

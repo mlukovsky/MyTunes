@@ -1,0 +1,33 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">MyTunes</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link fw-bold" href="/">Home</a>
+                <a class="nav-link fw-bold" href="/search">Search</a>
+            </div>
+            <div class="navbar-nav ms-auto">
+                <% if(!currentUser) {%>
+                    <a class="nav-link fw-bold" href="/login">Login</a>
+                    <a class="nav-link fw-bold" href="/register">Sign Up</a>
+                    <% } else {%>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" id="nav-dropdown-btn" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <%= currentUser.profileName %>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item fw-bold" href="/user/<%= currentUser.dbID %>">Profile</a>
+                                </li>
+                                <li><a class="dropdown-item fw-bold" href="/logout">Logout</a></li>
+                            </ul>
+                        </div>
+                        <% } %>
+            </div>
+        </div>
+    </div>
+</nav>
