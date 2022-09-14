@@ -9,16 +9,18 @@
             <img src="<%= artistData.images[0].url %>" alt="" class="img-fluid" id="artist-profile-img">
             <small>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        Genres:
-                        <% for(let genre of artistData.genres){ %>
-                            <div>
-                                <%= genre%>
-                            </div>
-                            <% } %>
-                    </li>
-                    <li class="list-group-item">Popularity: <%= artistData.popularity %>
-                    </li>
+                    <% if(artistData.genres.length) { %>
+                        <li class="list-group-item">
+                            Genres:
+                            <% for(let genre of artistData.genres){ %>
+                                <div>
+                                    <%= genre%>
+                                </div>
+                                <% } %>
+                        </li>
+                        <% } %>
+                            <li class="list-group-item">Popularity: <%= artistData.popularity %>
+                            </li>
                 </ul>
             </small>
             <form action="/addArtistToProfile" method="post">
@@ -31,20 +33,25 @@
                             d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
                     </svg> Add To Favorites</button>
             </form>
-            <h3 class="mt-3">Related Artists</h3>
-            <div class="mb-5">
-                <% for(let i=0; i < 8; i++){ %>
-                    <span class="mb-3">
-                        <a href="/artist/<%= relatedArtists.artists[i].id %>" target="_blank">
-                            <p class="h5">
-                                <%= relatedArtists.artists[i].name %>
-                            </p>
-                            <img src="<%= relatedArtists.artists[i].images[0].url %>" alt="" id="related-artist-img">
-                        </a>
-                    </span>
-                    <% } %>
+            <% if(relatedArtists.artists.length) { %>
+                <h3 class="mt-3">Related Artists</h3>
+                <div class="mb-5">
+                    <% for(let i=0; i < 8; i++){ %>
+                        <span class="mb-3">
+                            <a href="/artist/<%= relatedArtists.artists[i].id %>" target="_blank">
+                                <p class="h5">
+                                    <%= relatedArtists.artists[i].name %>
+                                </p>
+                                <% if(relatedArtists.artists[i].images.length) { %>
+                                    <img src="<%= relatedArtists.artists[i].images[0].url %>" alt=""
+                                        id="related-artist-img">
+                                    <% } %>
+                            </a>
+                        </span>
+                        <% } %>
 
-            </div>
+                </div>
+                <% } %>
         </div>
         <div class="col-6 text-center">
             <h3>Top Tracks</h3>
