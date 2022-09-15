@@ -9,9 +9,8 @@ const results = {
     ids: []
 };
 
-
-//Show user profile by ID and request access token
-module.exports.userProfile = async (req, res) => {
+//HOME PAGE
+module.exports.homePage = async (req, res) => {
     if (!token) {
         await axios({
             url: 'https://accounts.spotify.com/api/token',
@@ -33,6 +32,53 @@ module.exports.userProfile = async (req, res) => {
             console.log(error)
         });
     }
+    if (req.user) {
+        const idArray = []
+        let hasContent = true;
+        let randomSongID, randomArtistID, url, data;
+        const user = await User.findOne({ uri: req.user.id })
+        if (user.songs.length) {
+            randomSongID = user.songs[Math.floor(Math.random() * user.songs.length)].id
+            idArray.push(`song ${randomSongID}`)
+        }
+        if (user.artists.length) {
+            randomArtistID = user.artists[Math.floor(Math.random() * user.artists.length)].id
+            idArray.push(`artist ${randomArtistID}`)
+        }
+        const index = Math.floor(Math.random() * idArray.length)
+        switch (true) {
+            case (idArray[index].includes('song')):
+                url = `https://api.spotify.com/v1/recommendations?seed_tracks=${randomSongID}&market=US&limit=80`
+                break;
+            case (idArray[index].includes('artist')):
+                url = `https://api.spotify.com/v1/recommendations?seed_artists=${randomArtistID}&market=US&limit=80`
+                break;
+            default:
+                break;
+        }
+        if (url) {
+            await axios({
+                url: url,
+                headers: {
+                    'Accept': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            }).then(function (response) {
+                data = response.data
+            }).catch(function (error) {
+                console.log(error)
+            })
+        } else {
+            hasContent = false
+        }
+        return res.render('home', { data, hasContent })
+    }
+    res.render('home')
+}
+
+//Show user profile by ID and request access token
+module.exports.userProfile = async (req, res) => {
+
     console.log(token)
     const user = await User.findById(req.params.id).populate('reviews')
     res.render('users/profile', { user })
@@ -40,27 +86,6 @@ module.exports.userProfile = async (req, res) => {
 
 //Request access token and Render Search page
 module.exports.searchForm = async (req, res) => {
-    if (!token) {
-        await axios({
-            url: 'https://accounts.spotify.com/api/token',
-            method: 'post',
-            params: {
-                grant_type: 'client_credentials'
-            },
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            auth: {
-                username: process.env.SPOTIFY_CLIENT_ID,
-                password: process.env.SPOTIFY_CLIENT_SECRET
-            }
-        }).then(function (response) {
-            token = response.data.access_token
-        }).catch(function (error) {
-            console.log(error)
-        });
-    }
     console.log(token)
     console.log(results)
     res.render('search/search', { results })

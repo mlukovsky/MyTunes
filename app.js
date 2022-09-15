@@ -12,6 +12,7 @@ const methodOverride = require('method-override');
 const session = require('express-session')
 const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
+const axios = require('axios')
 const User = require('./models/user')
 
 
@@ -104,10 +105,7 @@ const favoriteRoutes = require('./routes/favorites')
 app.use('/', userRoutes, searchAndViewRoutes, reviewRoutes, favoriteRoutes)
 
 
-//HOME PAGE
-app.get('/', (req, res) => {
-    res.render('home')
-})
+
 
 app.listen(1000, () => {
     console.log('LISTENING ON PORT 1000')

@@ -17,6 +17,12 @@
     border-radius: 20%;
 } */
 
+.home-link a {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    font-weight: lighter;
+}
+
 a {
     text-decoration: none;
     color: black
@@ -25,6 +31,7 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
 
 #info-list li {
     font-size: 0.85em;

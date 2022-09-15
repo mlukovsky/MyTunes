@@ -1,1 +1,37 @@
 <% layout('layouts/boilerplate') %>
+
+    <% if(!currentUser){ %>
+        <div class="text-center">
+            <h1 class="home-link"><a href="/login">Sign In</a></h1>
+            <h4 class="home-link">Don't have an account yet? <a href="/register"> Sign Up</a></h2>
+        </div>
+        <% } else { %>
+            <% if(hasContent) { %>
+                <h1>Recommended Tracks %>
+                </h1>
+                <% for(let i=0; i < 20; i++){ %>
+                    <div class="row text-center mb-3">
+                        <% for(let j=i*4; j < (i*4)+4; j++) { %>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <img src="<%= data.tracks[j].album.images[1].url %>" class="card-img-top" alt="">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <a href="/song/<%= data.tracks[j].id %>" target="_blank">
+                                                <%= data.tracks[j].name %>
+                                            </a> by <a href="/artist/<%= data.tracks[j].artists[0].id %>"
+                                                target="_blank">
+                                                <%= data.tracks[j].artists[0].name %>
+                                            </a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                    </div>
+                    <% } %>
+                        <% } else { %>
+
+                            <% } %>
+                                <% } %>
+                                    </div>

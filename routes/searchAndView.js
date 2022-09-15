@@ -3,7 +3,7 @@ const router = express.Router();
 const searchAndView = require('../controllers/searchAndView')
 const { isLoggedIn } = require('../middleware')
 
-
+router.get('/', searchAndView.homePage)
 router.get('/user/:id', isLoggedIn, searchAndView.userProfile)
 router.route('/search')
     .get(isLoggedIn, searchAndView.searchForm)
