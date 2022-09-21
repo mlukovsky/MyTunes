@@ -7,14 +7,17 @@
         </div>
         <% } else { %>
             <% if(hasContent) { %>
-                <h1>Recommended Tracks %>
+                <h1>Recommended Tracks
                 </h1>
                 <% for(let i=0; i < 20; i++){ %>
                     <div class="row text-center mb-3">
                         <% for(let j=i*4; j < (i*4)+4; j++) { %>
                             <div class="col-md-3">
                                 <div class="card">
-                                    <img src="<%= data.tracks[j].album.images[1].url %>" class="card-img-top" alt="">
+                                    <a href="/song/<%= data.tracks[j].id %>" target="_blank">
+                                        <img src="<%= data.tracks[j].album.images[1].url %>" class="card-img-top"
+                                            alt="">
+                                    </a>
                                     <div class="card-body">
                                         <h6 class="card-title">
                                             <a href="/song/<%= data.tracks[j].id %>" target="_blank">
@@ -31,7 +34,12 @@
                     </div>
                     <% } %>
                         <% } else { %>
-
+                            <div>
+                                <h2 class="text-center home-link">You don't have any Tunes right now.
+                                    <div>
+                                        <a href="/search">Search for Music</a>
+                                    </div>
+                                </h2>
+                            </div>
                             <% } %>
                                 <% } %>
-                                    </div>

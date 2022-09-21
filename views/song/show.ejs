@@ -4,88 +4,112 @@
     <div class="row">
         <div class="col-6">
             <div class="card mb-3">
-                <a href="<%=data.external_urls.spotify%>" target="_blank">
-                    <img class="card-img-top" src="<%= data.album.images[0].url %>" alt="">
-                    <div class="card-body">
-                        <h3 class="card-title">
-                            <%= data.name %>
-                        </h3>
-                </a>
-                <h6 class="card-subtitle">
-                    <% for(let artist of data.artists) { %>
+                <!-- Embedded song player -->
+                <iframe style="border-radius:12px"
+                    src="https://open.spotify.com/embed/track/<%= data.id %>?utm_source=generator" width="100%"
+                    height="352" frameBorder="0" allowfullscreen="true"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
+                </iframe>
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <%= data.name %>
+                    </h3>
+                    <h6 class="card-subtitle">
+                        <% for(let artist of data.artists) { %>
 
-                        <a href="/artist/<%= artist.id %>">
-                            <%= artist.name %>
-                        </a>
-                        <% } %>
-                </h6>
-            </div>
-        </div>
-    </div>
-    <div class="col-6">
-        <small class="text-center mb-6">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <% if(data.album.album_type !=='single' ) { %>
-                        Album: <a href="/album/<%= data.album.id %>">
-                            <%= data.album.name %>
-                        </a>
-                        <% } else {%>
-                            Single
+                            <a href="/artist/<%= artist.id %>">
+                                <%= artist.name %>
+                            </a>
                             <% } %>
-                </li>
-                <li class="list-group-item">Release Date: <%= data.album.release_date %>
-                </li>
-                <li class="list-group-item">Duration: <%= Math.floor((data.duration_ms/1000)/60) %>:<%=
-                            Math.floor((data.duration_ms/1000)%60 )%>
-                </li>
-                <li class="list-group-item">Popularity: <%= data.popularity %>
-                </li>
-            </ul>
-        </small>
-        <div class="text-center">
-            <form action="/addSongToProfile" method="post" class="mb-3">
-                <input type="hidden" name="title" value="<%= data.name %>">
-                <input type="hidden" name="artist" value="<%= data.artists[0].name %>">
-                <input type="hidden" name="id" value="<%= data.id %>">
-                <input type="hidden" name="url" value="/song/<%= data.id %>">
-                <button type="submit" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16"
-                        height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
-                    </svg> Add To Favorites</button>
-            </form>
-        </div>
-        <!-- Reviews -->
-        <h3>Write a Review</h3>
-        <form action="/song/<%= data.id %>/reviews" method="post" class="validated-form mb-3" novalidate>
-            <div class="mb-3">
-                <label class="form-label" for="rating">Rating</label>
-                <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="body">Review</label>
-                <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3" required></textarea>
-                <div class="valid-feedback">Looks Good!</div>
-            </div>
-            <input type="hidden" name="song[title]" value="<%= data.name %>">
-            <input type="hidden" name="song[artist]" value="<%= data.artists[0].name %>">
-            <input type="hidden" name="song[id]" value="<%= data.id %>">
-            <button class="btn btn-success">Add Review</button>
-        </form>
-        <% for(let review of reviews){ %>
-            <div class="card mb-3">
-                <div class="mb-3 card-body">
-                    <h5 class="card-title">
-                        <%= review.author.username %>
-                    </h5>
-                    <p>
-                        Rating: <%= review.rating %>
-                    </p>
-                    <p class="card-text">
-                        Review: <%= review.body %>
-                    </p>
+                    </h6>
                 </div>
             </div>
-            <% } %>
-    </div>
+        </div>
+        <div class="col-6">
+            <small class="text-center mb-6">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <% if(data.album.album_type !=='single' ) { %>
+                            Album: <a href="/album/<%= data.album.id %>">
+                                <%= data.album.name %>
+                            </a>
+                            <% } else {%>
+                                Single
+                                <% } %>
+                    </li>
+                    <li class="list-group-item">Release Date: <%= data.album.release_date %>
+                    </li>
+                    <li class="list-group-item">Duration: <%= Math.floor((data.duration_ms/1000)/60) %>:<%=
+                                Math.floor((data.duration_ms/1000)%60 )%>
+                    </li>
+                    <li class="list-group-item">Popularity: <%= data.popularity %>
+                    </li>
+                </ul>
+            </small>
+            <% if(isFavorite){ %>
+                <div class="text-center">
+                    <form action="/deleteSongFromProfile?_method=DELETE" method="post" class="mb-3">
+                        <input type="hidden" name="title" value="<%= data.name %>">
+                        <input type="hidden" name="id" value="<%= data.id %>">
+                        <input type="hidden" name="url" value="/song/<%= data.id %>">
+                        <button type="submit" class="btn btn-danger btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path
+                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                <path fill-rule="evenodd"
+                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                            </svg> Remove From Favorites</button>
+                    </form>
+                </div>
+                <% } else {%>
+                    <div class="text-center">
+                        <form action="/addSongToProfile" method="post" class="mb-3">
+                            <input type="hidden" name="title" value="<%= data.name %>">
+                            <input type="hidden" name="artist" value="<%= data.artists[0].name %>">
+                            <input type="hidden" name="id" value="<%= data.id %>">
+                            <input type="hidden" name="url" value="/song/<%= data.id %>">
+                            <button type="submit" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" fill="currentColor" class="bi bi-plus-lg"
+                                    viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                                </svg> Add To Favorites</button>
+                        </form>
+                    </div>
+                    <% } %>
+                        <!-- Reviews -->
+                        <h3>Write a Review</h3>
+                        <form action="/song/<%= data.id %>/reviews" method="post" class="validated-form mb-3"
+                            novalidate>
+                            <div class="mb-3">
+                                <label class="form-label" for="rating">Rating</label>
+                                <input class="form-range" type="range" min="1" max="5" name="review[rating]"
+                                    id="rating">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="body">Review</label>
+                                <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3"
+                                    required></textarea>
+                                <div class="valid-feedback">Looks Good!</div>
+                            </div>
+                            <input type="hidden" name="song[title]" value="<%= data.name %>">
+                            <input type="hidden" name="song[artist]" value="<%= data.artists[0].name %>">
+                            <input type="hidden" name="song[id]" value="<%= data.id %>">
+                            <button class="btn btn-success">Add Review</button>
+                        </form>
+                        <% for(let review of reviews){ %>
+                            <div class="card mb-3">
+                                <div class="mb-3 card-body">
+                                    <h5 class="card-title">
+                                        <%= review.author.username %>
+                                    </h5>
+                                    <p>
+                                        Rating: <%= review.rating %>
+                                    </p>
+                                    <p class="card-text">
+                                        Review: <%= review.body %>
+                                    </p>
+                                </div>
+                            </div>
+                            <% } %>
+        </div>

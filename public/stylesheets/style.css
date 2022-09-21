@@ -40,16 +40,19 @@ a:hover {
 #related-artist-img {
     height: 64px;
     width: 64px;
+    border-radius: 5px;
 }
 
 #artist-profile-img {
     height: 320px;
     width: 280px;
+    border-radius: 5px;
 }
 
 #artist-profile-album-img {
     height: 200px;
     width: 200px;
+    border-radius: 5px;
 }
 
 

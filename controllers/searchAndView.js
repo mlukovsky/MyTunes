@@ -46,6 +46,7 @@ module.exports.homePage = async (req, res) => {
             idArray.push(`artist ${randomArtistID}`)
         }
         const index = Math.floor(Math.random() * idArray.length)
+        if (!idArray.length) { return res.render('home', { hasContent: false }) }
         switch (true) {
             case (idArray[index].includes('song')):
                 url = `https://api.spotify.com/v1/recommendations?seed_tracks=${randomSongID}&market=US&limit=80`
@@ -53,24 +54,18 @@ module.exports.homePage = async (req, res) => {
             case (idArray[index].includes('artist')):
                 url = `https://api.spotify.com/v1/recommendations?seed_artists=${randomArtistID}&market=US&limit=80`
                 break;
-            default:
-                break;
         }
-        if (url) {
-            await axios({
-                url: url,
-                headers: {
-                    'Accept': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            }).then(function (response) {
-                data = response.data
-            }).catch(function (error) {
-                console.log(error)
-            })
-        } else {
-            hasContent = false
-        }
+        await axios({
+            url: url,
+            headers: {
+                'Accept': 'application/json',
+                Authorization: `Bearer ${token}`
+            }
+        }).then(function (response) {
+            data = response.data
+        }).catch(function (error) {
+            console.log(error)
+        })
         return res.render('home', { data, hasContent })
     }
     res.render('home')
@@ -169,6 +164,9 @@ module.exports.displaySearchResults = (req, res) => {
 //View song by ID
 module.exports.viewSong = async (req, res) => {
     const { id } = req.params;
+    const user = await User.findOne({ uri: req.user.id })
+    //Determine if the user has the currently viewed song in their favorites
+    const isFavorite = user.songs.some(el => el.id === id)
     const reviews = await Review.find({ 'song.id': id }).populate('author')
     axios({
         url: `https://api.spotify.com/v1/tracks/${id}`,
@@ -178,7 +176,7 @@ module.exports.viewSong = async (req, res) => {
         }
     }).then(function (response) {
         const data = response.data;
-        res.render('song/show', { data, reviews })
+        res.render('song/show', { data, reviews, isFavorite })
     }).catch(function (error) {
         console.log(error)
     })
@@ -187,6 +185,9 @@ module.exports.viewSong = async (req, res) => {
 //View album by ID
 module.exports.viewAlbum = async (req, res) => {
     const { id } = req.params;
+    const user = await User.findOne({ uri: req.user.id })
+    //Determine if the user has the currently viewed album in their favorites
+    const isFavorite = user.albums.some(el => el.id === id)
     const reviews = await Review.find({ 'album.id': id }).populate('author')
     axios({
         url: `https://api.spotify.com/v1/albums/${id}`,
@@ -196,7 +197,7 @@ module.exports.viewAlbum = async (req, res) => {
         }
     }).then(function (response) {
         const data = response.data;
-        res.render('album/show', { data, reviews })
+        res.render('album/show', { data, reviews, isFavorite })
     }).catch(function (error) {
         console.log(error)
     })
@@ -205,6 +206,9 @@ module.exports.viewAlbum = async (req, res) => {
 //View artist by ID
 module.exports.viewArtist = async (req, res) => {
     const { id } = req.params;
+    const user = await User.findOne({ uri: req.user.id })
+    //Determine if the user has the currently viewed artist in their favorites
+    const isFavorite = user.artists.some(el => el.id === id)
     const reviews = await Review.find({ 'artist.id': id }).populate('author')
     let artistData = {};
     let topTracks = {};
@@ -255,7 +259,7 @@ module.exports.viewArtist = async (req, res) => {
         }
     }).then(function (response) {
         relatedArtists = response.data;
-        res.render('artist/show', { artistData, topTracks, albums, relatedArtists, reviews })
+        res.render('artist/show', { artistData, topTracks, albums, relatedArtists, reviews, isFavorite })
     }).catch(function (error) {
         console.log(error)
     })
