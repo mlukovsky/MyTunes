@@ -1,0 +1,4 @@
+-Add profile image upload and display it in the navbar
+-Add i popover next to popularity
+-Change display format of duration and release date (maybe just get rid of duration)
+-Fix access token expiration error

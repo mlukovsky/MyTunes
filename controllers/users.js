@@ -1,7 +1,9 @@
 const User = require('../models/user')
 const axios = require('axios')
 let registering = false;
-
+const { cloudinary, storage } = require('../cloudinary')
+const multer = require('multer')
+const upload = multer({ storage })
 
 //SPOTIFY AUTHENTICATION ROUTES
 module.exports.authError = (req, res) => {
@@ -64,4 +66,40 @@ module.exports.registerAuthdUser = async (req, res) => {
     await user.save();
     req.flash('success', `Welcome, ${name}!`)
     res.redirect('/')
+}
+
+module.exports.addProfileImg = async (req, res) => {
+    const user = await User.findOne({ uri: req.user.id });
+    user.profileImage = {
+        url: req.file.path,
+        filename: req.file.filename
+    };
+    await user.save();
+    res.redirect(`/user/${user._id}`);
+}
+
+module.exports.editProfileImgForm = async (req, res) => {
+    const user = await User.findById(req.params.id)
+    res.render('users/editProfileImg', { user });
+}
+
+module.exports.deleteProfileImg = async (req, res) => {
+    const { filename } = req.body;
+    await cloudinary.uploader.destroy(filename);
+    const user = await User.findOne({ uri: req.user.id });
+    await user.updateOne({ $unset: { profileImage: "" } })
+    await user.save();
+    req.flash('success', 'Profile Picture Deleted!')
+    res.redirect(`/user/${user._id}`);
+}
+
+module.exports.editProfileImg = async (req, res) => {
+    const { oldImgFilename } = req.body;
+    console.log(oldImgFilename)
+    await cloudinary.uploader.destroy(oldImgFilename);
+    const user = await User.findOne({ uri: req.user.id });
+    await user.updateOne({ $pull: { profileImage: { 'profileImage.filename': oldImgFilename } } });
+    await user.save();
+    req.flash('success', 'Your profile picture has been changed!');
+    res.redirect(`/user/${user._id}`);
 }

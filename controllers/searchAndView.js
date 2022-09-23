@@ -80,7 +80,7 @@ module.exports.userProfile = async (req, res) => {
 }
 
 //Request access token and Render Search page
-module.exports.searchForm = async (req, res) => {
+module.exports.searchForm = (req, res) => {
     console.log(token)
     console.log(results)
     res.render('search/search', { results })

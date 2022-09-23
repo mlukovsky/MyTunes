@@ -15,7 +15,7 @@ const SpotifyStrategy = require('passport-spotify').Strategy;
 const axios = require('axios')
 const User = require('./models/user')
 
-
+const ExpressError = require('./helpers/ExpressError')
 const { isLoggedIn } = require('./middleware')
 
 
@@ -64,7 +64,7 @@ passport.deserializeUser(function (user, done) {
 passport.use(new SpotifyStrategy({
     clientID: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-    callbackURL: "http://localhost:1000/auth/spotify/callback"
+    callbackURL: `http://localhost:${process.env.PORT}/auth/spotify/callback`
 },
     function (accessToken, refreshToken, profile, done) {
         return done(null, profile);
@@ -101,12 +101,13 @@ const searchAndViewRoutes = require('./routes/searchAndView')
 const reviewRoutes = require('./routes/reviews')
 const favoriteRoutes = require('./routes/favorites')
 
+app.use('/', userRoutes, searchAndViewRoutes, favoriteRoutes, reviewRoutes)
 
-app.use('/', userRoutes, searchAndViewRoutes, reviewRoutes, favoriteRoutes)
+//For requests to nonexistent routes
+app.all('*', (req, res, next) => {
+    next(new ExpressError(404, 'Page Not Found'))
+})
 
-
-
-
-app.listen(1000, () => {
-    console.log('LISTENING ON PORT 1000')
+app.listen(process.env.PORT, () => {
+    console.log('LISTENING ON PORT ' + process.env.PORT)
 })

@@ -18,6 +18,15 @@ const albumSchema = new Schema({
     id: String
 })
 
+const imageSchema = new Schema({
+    url: String,
+    filename: String
+})
+
+imageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_200')
+})
+
 const userSchema = new Schema({
     email: {
         type: String,
@@ -32,6 +41,7 @@ const userSchema = new Schema({
         enum: ['spotify'],
         required: true
     },
+    profileImage: [imageSchema],
     uri: {
         type: String,
         required: true,
