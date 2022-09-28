@@ -1,5 +1,14 @@
+.navbar {
+    height: 4em;
+}
+
 .nav-link {
     color: #edf2f4;
+    font-size: 1.2em;
+}
+
+.navbar a:hover {
+    text-decoration: none;
 }
 
 #connect-button {
@@ -16,6 +25,22 @@
 /* #nav-dropdown-btn {
     border-radius: 20%;
 } */
+
+#profile-pic {
+    height: 210px;
+    width: 250px;
+    border-radius: 5px;
+}
+
+#profile-pic-navbar {
+    height: 48px;
+    width: 48px;
+}
+
+#profile-pic-reviews {
+    height: 32px;
+    width: 32px;
+}
 
 .home-link a {
     text-decoration: underline;
@@ -62,4 +87,8 @@ a:hover {
 
 .nav-tabs button {
     color: black;
+}
+
+#review-avg-star {
+    color: #fdc500;
 }

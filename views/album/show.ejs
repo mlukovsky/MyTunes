@@ -1,5 +1,6 @@
 <% layout('layouts/boilerplate') %>
 
+    <link rel="stylesheet" href="/stylesheets/starability/stars.css">
 
     <div class="row">
         <div class="col-6">
@@ -19,6 +20,15 @@
                         <% } %>
                 </h6>
             </div>
+            <% if(reviewAverage !=='' ){ %>
+                <p>
+                    <%= reviewAverage %><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            id="review-avg-star" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 18 18">
+                            <path
+                                d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                        </svg>(<%= count %>)
+                </p>
+                <% } %>
         </div>
     </div>
     <div class="col-6">
@@ -77,10 +87,21 @@
                     <!-- Reviews -->
                     <h3>Write a Review</h3>
                     <form action="/album/<%= data.id %>/reviews" method="post" class="validated-form mb-3" novalidate>
-                        <div class="mb-3">
-                            <label class="form-label" for="rating">Rating</label>
-                            <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
-                        </div>
+                        <fieldset class="starability-checkmark mb-2">
+                            <legend>Rating:</legend>
+                            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1"
+                                checked aria-label="No rating." />
+                            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
                         <div class="mb-3">
                             <label class="form-label" for="body">Review</label>
                             <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3"
@@ -94,16 +115,34 @@
                     </form>
                     <% for(let review of reviews){ %>
                         <div class="card mb-3">
-                            <div class="mb-3 card-body">
+                            <div class="mb-3 card-body pb-0">
                                 <h5 class="card-title">
-                                    <%= review.author.username %>
+                                    <span>
+                                        <a href="/user/<%= review.author._id %>">
+                                            <% if(review.author.profileImage) { %>
+                                                <img src="<%= review.author.profileImage.url %>" class="rounded-circle"
+                                                    id="profile-pic-reviews" alt="">
+                                                <% } %>
+                                                    <%= review.author.username %>
+                                        </a>
+                                    </span>
                                 </h5>
-                                <p>
-                                    Rating: <%= review.rating %>
+                                <p class="starability-result" data-rating="<%= review.rating %>">
                                 </p>
                                 <p class="card-text">
-                                    Review: <%= review.body %>
+                                    <%= review.body %>
                                 </p>
+                                <% if(review.author.equals(currentUser.dbID)) { %>
+                                    <form action="/album/<%= data.id %>/reviews?_method=DELETE" method="post">
+                                        <button class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                            </svg></button>
+                                    </form>
+                                    <% } %>
                             </div>
                         </div>
                         <% } %>

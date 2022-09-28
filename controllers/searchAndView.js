@@ -80,7 +80,7 @@ module.exports.userProfile = async (req, res) => {
 }
 
 //Request access token and Render Search page
-module.exports.searchForm = async (req, res) => {
+module.exports.searchForm = (req, res) => {
     console.log(token)
     console.log(results)
     res.render('search/search', { results })
@@ -168,6 +168,16 @@ module.exports.viewSong = async (req, res) => {
     //Determine if the user has the currently viewed song in their favorites
     const isFavorite = user.songs.some(el => el.id === id)
     const reviews = await Review.find({ 'song.id': id }).populate('author')
+    let reviewAverage = '';
+    let count = 0;
+    if (Object.keys(reviews).length !== 0) {
+        let total = 0;
+        for (let review of reviews) {
+            total += review.rating;
+            count++;
+        }
+        reviewAverage = (total / count).toFixed(2);
+    }
     axios({
         url: `https://api.spotify.com/v1/tracks/${id}`,
         headers: {
@@ -176,7 +186,7 @@ module.exports.viewSong = async (req, res) => {
         }
     }).then(function (response) {
         const data = response.data;
-        res.render('song/show', { data, reviews, isFavorite })
+        res.render('song/show', { data, reviews, reviewAverage, count, isFavorite })
     }).catch(function (error) {
         console.log(error)
     })
@@ -189,6 +199,16 @@ module.exports.viewAlbum = async (req, res) => {
     //Determine if the user has the currently viewed album in their favorites
     const isFavorite = user.albums.some(el => el.id === id)
     const reviews = await Review.find({ 'album.id': id }).populate('author')
+    let reviewAverage = '';
+    let count = 0;
+    if (Object.keys(reviews).length !== 0) {
+        let total = 0;
+        for (let review of reviews) {
+            total += review.rating;
+            count++;
+        }
+        reviewAverage = (total / count).toFixed(2);
+    }
     axios({
         url: `https://api.spotify.com/v1/albums/${id}`,
         headers: {
@@ -197,7 +217,7 @@ module.exports.viewAlbum = async (req, res) => {
         }
     }).then(function (response) {
         const data = response.data;
-        res.render('album/show', { data, reviews, isFavorite })
+        res.render('album/show', { data, reviews, reviewAverage, count, isFavorite })
     }).catch(function (error) {
         console.log(error)
     })
@@ -210,6 +230,16 @@ module.exports.viewArtist = async (req, res) => {
     //Determine if the user has the currently viewed artist in their favorites
     const isFavorite = user.artists.some(el => el.id === id)
     const reviews = await Review.find({ 'artist.id': id }).populate('author')
+    let reviewAverage = '';
+    let count = 0;
+    if (Object.keys(reviews).length !== 0) {
+        let total = 0;
+        for (let review of reviews) {
+            total += review.rating;
+            count++;
+        }
+        reviewAverage = (total / count).toFixed(2);
+    }
     let artistData = {};
     let topTracks = {};
     let albums = {};
@@ -259,7 +289,7 @@ module.exports.viewArtist = async (req, res) => {
         }
     }).then(function (response) {
         relatedArtists = response.data;
-        res.render('artist/show', { artistData, topTracks, albums, relatedArtists, reviews, isFavorite })
+        res.render('artist/show', { artistData, topTracks, albums, relatedArtists, reviews, reviewAverage, count, isFavorite })
     }).catch(function (error) {
         console.log(error)
     })

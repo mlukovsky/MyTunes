@@ -1,50 +1,54 @@
 <% layout('layouts/boilerplate') %>
     <h1 class="display-2 text-center">Search</h1>
 
-    <form action="/search" method="post" class="validated-form" novalidate>
-        <div>
-            <label class="form-label" for="song">Song</label>
-        </div>
-        <div class="mb-3">
-            <input class="form-control" type="text" name="song" id="song">
-        </div>
-        <div>
-            <label class="form-label" for="artist">Artist</label>
-        </div>
-        <div class="mb-3">
-            <input class="form-control" type="text" name="artist" id="artist">
-        </div>
-        <div>
-            <label class="form-label" for="album">Album</label>
-        </div>
-        <div class="mb-3">
-            <input class="form-control" type="text" name="album" id="album">
-        </div>
-        <button class="btn btn-success mb-3">Search</button>
-    </form>
+    <div class="w-75 mx-auto">
+        <form action="/search" method="post" class="validated-form" novalidate>
+            <div>
+                <label class="form-label" for="song">Song</label>
+            </div>
+            <div class="mb-3">
+                <input class="form-control" type="text" name="song" id="song">
+            </div>
+            <div>
+                <label class="form-label" for="artist">Artist</label>
+            </div>
+            <div class="mb-3">
+                <input class="form-control" type="text" name="artist" id="artist">
+            </div>
+            <div>
+                <label class="form-label" for="album">Album</label>
+            </div>
+            <div class="mb-3">
+                <input class="form-control" type="text" name="album" id="album">
+            </div>
+            <button class="btn btn-success mb-3">Search</button>
+        </form>
+    </div>
 
     <% if(results.titles.size) { %>
-        <% let j=0; %>
-            <% for(const i of results.titles){ %>
-                <p>
-                    <% if(i.toString().includes('SONG')) {%>
-                        <a href="/song/<%= results.ids[j] %>">
-                            <%= i.toString() %>
-                        </a>
-                        <% } else if(i.toString().includes('ALBUM')) {%>
-                            <a href="/album/<%= results.ids[j] %>">
+        <div class="w-75 mx-auto">
+            <% let j=0; %>
+                <% for(const i of results.titles){ %>
+                    <p>
+                        <% if(i.toString().includes('SONG')) {%>
+                            <a href="/song/<%= results.ids[j] %>">
                                 <%= i.toString() %>
                             </a>
-                            <% } else{ %>
-                                <a href="/artist/<%= results.ids[j] %>">
+                            <% } else if(i.toString().includes('ALBUM')) {%>
+                                <a href="/album/<%= results.ids[j] %>">
                                     <%= i.toString() %>
                                 </a>
-                                <% } %>
-                </p>
-                <% j++; %>
-                    <% } %>
-                        <% results.titles.clear() %>
-                            <% results.ids.length=0 %>
                                 <% } else{ %>
-                                    <p>No Results Found</p>
+                                    <a href="/artist/<%= results.ids[j] %>">
+                                        <%= i.toString() %>
+                                    </a>
                                     <% } %>
+                    </p>
+                    <% j++; %>
+                        <% } %>
+        </div>
+        <% results.titles.clear() %>
+            <% results.ids.length=0 %>
+                <% } else{ %>
+                    <p>No Results Found</p>
+                    <% } %>
