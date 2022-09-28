@@ -3,10 +3,14 @@
         <a class="navbar-brand" href="/">MyTunes</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <% if(currentUser && currentUser.profilePicUrl){ %> <span><img src="<%= currentUser.profilePicUrl %>"
+                        class="img-fluid rounded-circle" id="profile-pic-navbar" alt="Profile Picture"></span>
+                <% } else { %>
+                    <span class="navbar-toggler-icon"></span>
+                    <% } %>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
+            <div class="navbar-nav bg-primary">
                 <a class="nav-link fw-bold" href="/">Home</a>
                 <a class="nav-link fw-bold" href="/search">Search <svg xmlns="http://www.w3.org/2000/svg" width="14"
                         height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -20,15 +24,33 @@
                     <a class="nav-link fw-bold" href="/register">Sign Up</a>
                     <% } else {%>
                         <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" id="nav-dropdown-btn" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <%= currentUser.profileName %>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item fw-bold" href="/user/<%= currentUser.dbID %>">Profile</a>
-                                </li>
-                                <li><a class="dropdown-item fw-bold" href="/logout">Logout</a></li>
-                            </ul>
+                            <% if(currentUser.profilePicUrl) { %>
+                                <button class=" btn btn-primary dropdown-toggle" id="nav-dropdown-btn" type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="<%= currentUser.profilePicUrl %>" class="img-fluid rounded-circle"
+                                        id="profile-pic-navbar" alt="Profile Picture">
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <%= currentUser.profileName %>
+                                    </li>
+                                    <li><a class="dropdown-item fw-bold"
+                                            href="/user/<%= currentUser.dbID %>">Profile</a>
+                                    </li>
+                                    <li><a class="dropdown-item fw-bold" href="/logout">Logout</a></li>
+                                </ul>
+                                <% } else { %>
+                                    <button class="btn btn-secondary dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <%= currentUser.profileName %>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item fw-bold"
+                                                href="/user/<%= currentUser.dbID %>">Profile</a>
+                                        </li>
+                                        <li><a class="dropdown-item fw-bold" href="/logout">Logout</a></li>
+                                    </ul>
+                                    <% } %>
                         </div>
                         <% } %>
             </div>

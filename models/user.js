@@ -41,7 +41,7 @@ const userSchema = new Schema({
         enum: ['spotify'],
         required: true
     },
-    profileImage: [imageSchema],
+    profileImage: imageSchema,
     uri: {
         type: String,
         required: true,

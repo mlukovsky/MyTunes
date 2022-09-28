@@ -90,6 +90,9 @@ app.use(async function (req, res, next) {
         const foundUser = await User.findOne({ uri: req.user.id })
         req.user.profileName = foundUser.username;
         req.user.dbID = foundUser._id;
+        if (foundUser.profileImage) {
+            req.user.profilePicUrl = foundUser.profileImage.url;
+        }
     }
     next();
 });
@@ -101,7 +104,8 @@ const searchAndViewRoutes = require('./routes/searchAndView')
 const reviewRoutes = require('./routes/reviews')
 const favoriteRoutes = require('./routes/favorites')
 
-app.use('/', userRoutes, searchAndViewRoutes, favoriteRoutes, reviewRoutes)
+app.use('/', userRoutes, searchAndViewRoutes, reviewRoutes, favoriteRoutes)
+
 
 //For requests to nonexistent routes
 app.all('*', (req, res, next) => {

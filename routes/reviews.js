@@ -6,7 +6,7 @@ const catchAsync = require('../helpers/catchAsync')
 
 router.route('/song/:id/reviews')
     .post(catchAsync(reviews.writeSongReview))
-    .delete(catchAsync(isSongReviewAuthor, reviews.deleteSongReview))
+    .delete(isSongReviewAuthor, catchAsync(reviews.deleteSongReview))
 
 router.route('/album/:id/reviews')
     .post(catchAsync(reviews.writeAlbumReview))

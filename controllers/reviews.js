@@ -2,7 +2,6 @@ const User = require('../models/user')
 const Review = require('../models/review')
 
 module.exports.writeSongReview = async (req, res) => {
-    //res.send(req.body)
     const { id } = req.params;
     const user = await User.findOne({ uri: req.user.id });
     const review = new Review(req.body.review);

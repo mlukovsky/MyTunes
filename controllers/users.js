@@ -94,11 +94,13 @@ module.exports.deleteProfileImg = async (req, res) => {
 }
 
 module.exports.editProfileImg = async (req, res) => {
-    const { oldImgFilename } = req.body;
-    console.log(oldImgFilename)
-    await cloudinary.uploader.destroy(oldImgFilename);
+    await cloudinary.uploader.destroy(req.body.oldImgFilename);
     const user = await User.findOne({ uri: req.user.id });
-    await user.updateOne({ $pull: { profileImage: { 'profileImage.filename': oldImgFilename } } });
+    await user.updateOne({ $unset: { profileImage: "" } });
+    user.profileImage = {
+        url: req.file.path,
+        filename: req.file.filename
+    }
     await user.save();
     req.flash('success', 'Your profile picture has been changed!');
     res.redirect(`/user/${user._id}`);
