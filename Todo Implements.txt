@@ -1,7 +1,6 @@
 -Add image upload process to new user registration
 -Add i popover next to popularity
--Add stars for reviews
 -Add search for users
--Change display format of duration and release date (maybe just get rid of duration)
+-Change display format of release date
 -Fix access token expiration error
 -Make a good looking 404 not found page

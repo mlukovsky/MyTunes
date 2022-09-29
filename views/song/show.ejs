@@ -1,9 +1,11 @@
 <% layout('layouts/boilerplate') %>
-
+    <title>
+        <%= data.name %> - MyTunes
+    </title>
     <link rel="stylesheet" href="/stylesheets/starability/stars.css">
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-5">
             <div class="card mb-3">
                 <!-- Embedded song player -->
                 <iframe style="border-radius:12px"
@@ -35,7 +37,8 @@
                 </p>
                 <% } %>
         </div>
-        <div class="col-6">
+        <div class="col-1"></div>
+        <div class="col-5">
             <small class="text-center mb-6">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
@@ -48,9 +51,6 @@
                                 <% } %>
                     </li>
                     <li class="list-group-item">Release Date: <%= data.album.release_date %>
-                    </li>
-                    <li class="list-group-item">Duration: <%= Math.floor((data.duration_ms/1000)/60) %>:<%=
-                                Math.floor((data.duration_ms/1000)%60 )%>
                     </li>
                     <li class="list-group-item">Popularity: <%= data.popularity %>
                     </li>

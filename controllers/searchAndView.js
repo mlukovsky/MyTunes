@@ -9,32 +9,33 @@ const results = {
     ids: []
 };
 
-//HOME PAGE
-module.exports.homePage = async (req, res) => {
-    if (!token) {
-        await axios({
-            url: 'https://accounts.spotify.com/api/token',
-            method: 'post',
-            params: {
-                grant_type: 'client_credentials'
-            },
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            auth: {
-                username: process.env.SPOTIFY_CLIENT_ID,
-                password: process.env.SPOTIFY_CLIENT_SECRET
-            }
-        }).then(function (response) {
-            token = response.data.access_token
-        }).catch(function (error) {
-            console.log(error)
-        });
-    }
+
+//HOME PAGE WITH RECOMMENDED TRACKS
+module.exports.homePageWithContent = async (req, res) => {
     if (req.user) {
+        if (!token) {
+            await axios({
+                url: 'https://accounts.spotify.com/api/token',
+                method: 'post',
+                params: {
+                    grant_type: 'client_credentials'
+                },
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                auth: {
+                    username: process.env.SPOTIFY_CLIENT_ID,
+                    password: process.env.SPOTIFY_CLIENT_SECRET
+                }
+            }).then(function (response) {
+                token = response.data.access_token
+            }).catch(function (error) {
+                console.log(error)
+            });
+        }
+        const currentPage = parseInt(req.params.number, 10);
         const idArray = []
-        let hasContent = true;
         let randomSongID, randomArtistID, url, data;
         const user = await User.findOne({ uri: req.user.id })
         if (user.songs.length) {
@@ -46,13 +47,12 @@ module.exports.homePage = async (req, res) => {
             idArray.push(`artist ${randomArtistID}`)
         }
         const index = Math.floor(Math.random() * idArray.length)
-        if (!idArray.length) { return res.render('home', { hasContent: false }) }
         switch (true) {
             case (idArray[index].includes('song')):
-                url = `https://api.spotify.com/v1/recommendations?seed_tracks=${randomSongID}&market=US&limit=80`
+                url = `https://api.spotify.com/v1/recommendations?seed_tracks=${randomSongID}&market=US&limit=16`
                 break;
             case (idArray[index].includes('artist')):
-                url = `https://api.spotify.com/v1/recommendations?seed_artists=${randomArtistID}&market=US&limit=80`
+                url = `https://api.spotify.com/v1/recommendations?seed_artists=${randomArtistID}&market=US&limit=16`
                 break;
         }
         await axios({
@@ -66,9 +66,18 @@ module.exports.homePage = async (req, res) => {
         }).catch(function (error) {
             console.log(error)
         })
-        return res.render('home', { data, hasContent })
+        return res.render('home', { data, hasContent: true, currentPage })
     }
     res.render('home')
+}
+
+//HOME PAGE WITHOUT RECOMMENDED TRACKS
+module.exports.homePageNoContent = async (req, res) => {
+    if (req.user) {
+        const user = await User.findOne({ uri: req.user.id });
+        if (user.songs.length || user.artists.length) { return res.redirect('/page/1') }
+    }
+    res.render('home', { hasContent: false })
 }
 
 //Show user profile by ID and request access token

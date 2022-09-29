@@ -1,18 +1,18 @@
 <% layout('layouts/boilerplate') %>
-
+    <title>
+        <%= data.name %> - MyTunes
+    </title>
     <link rel="stylesheet" href="/stylesheets/starability/stars.css">
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-5">
             <div class="card mb-3">
-                <a href="<%=data.external_urls.spotify%>" target="_blank">
-                    <img class="card-img-top" src="<%= data.images[0].url %>" alt="">
-                    <div class="card-body">
-                        <h3 class="card-title">
-                            <%= data.name %>
-                        </h3>
-                </a>
-                <h6 class="card-subtitle">
+                <iframe style="border-radius:12px"
+                    src="https://open.spotify.com/embed/album/<%= data.id %>?utm_source=generator" width="100%"
+                    height="380" frameBorder="0" allowfullscreen="true"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"></iframe>
+                <h6 class="card-subtitle mt-4 mx-2 mb-2">
                     <% for(let artist of data.artists) { %>
                         <a href="/artist/<%= artist.id %>">
                             <%= artist.name %>
@@ -20,6 +20,7 @@
                         <% } %>
                 </h6>
             </div>
+
             <% if(reviewAverage !=='' ){ %>
                 <p>
                     <%= reviewAverage %><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -30,120 +31,113 @@
                 </p>
                 <% } %>
         </div>
-    </div>
-    <div class="col-6">
-        <small class="text-center">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    Release Date: <%= data.release_date %>
-                </li>
-                <li class="list-group-item">Popularity: <%= data.popularity %>
-                </li>
-            </ul>
-        </small>
-        <div class="btn-group">
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                data-bs-auto-close="false" aria-expanded="false">
-                View Tracks (<%= data.total_tracks %>)
-            </button>
-            <ul class="dropdown-menu" id="info-list">
-                <% for(let track of data.tracks.items) { %>
-                    <li><a class="dropdown-item" href="/song/<%= track.id %>">
-                            <%= track.name %>
-                        </a></li>
-                    <% } %>
-            </ul>
-        </div>
-        <% if(isFavorite){ %>
-            <div class="text-center">
-                <form action="/deleteAlbumFromProfile?_method=DELETE" method="post" class="mb-3">
-                    <input type="hidden" name="title" value="<%= data.name %>">
-                    <input type="hidden" name="id" value="<%= data.id %>">
-                    <input type="hidden" name="url" value="/album/<%= data.id %>">
-                    <button type="submit" class="btn btn-danger btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
-                            width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                            <path
-                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                            <path fill-rule="evenodd"
-                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                        </svg> Remove From Favorites</button>
-                </form>
-            </div>
-            <% } else { %>
+
+        <div class="col-1"></div>
+
+        <div class="col-5">
+            <small class="text-center">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Release Date: <%= data.release_date %>
+                    </li>
+                    <li class="list-group-item">Popularity: <%= data.popularity %>
+                    </li>
+                </ul>
+            </small>
+            <% if(isFavorite){ %>
                 <div class="text-center">
-                    <form action="/addAlbumToProfile" method="post" class="mb-3">
+                    <form action="/deleteAlbumFromProfile?_method=DELETE" method="post" class="mb-3">
                         <input type="hidden" name="title" value="<%= data.name %>">
-                        <input type="hidden" name="artist" value="<%= data.artists[0].name %>">
                         <input type="hidden" name="id" value="<%= data.id %>">
                         <input type="hidden" name="url" value="/album/<%= data.id %>">
-                        <button type="submit" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
-                                width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                        <button type="submit" class="btn btn-danger btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path
+                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
                                 <path fill-rule="evenodd"
-                                    d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
-                            </svg> Add To Favorites</button>
+                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                            </svg> Remove From Favorites</button>
                     </form>
                 </div>
-                <% } %>
-                    <!-- Reviews -->
-                    <h3>Write a Review</h3>
-                    <form action="/album/<%= data.id %>/reviews" method="post" class="validated-form mb-3" novalidate>
-                        <fieldset class="starability-checkmark mb-2">
-                            <legend>Rating:</legend>
-                            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1"
-                                checked aria-label="No rating." />
-                            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                            <label for="first-rate1" title="Terrible">1 star</label>
-                            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                            <label for="first-rate2" title="Not good">2 stars</label>
-                            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                            <label for="first-rate3" title="Average">3 stars</label>
-                            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                            <label for="first-rate4" title="Very good">4 stars</label>
-                            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                            <label for="first-rate5" title="Amazing">5 stars</label>
-                        </fieldset>
-                        <div class="mb-3">
-                            <label class="form-label" for="body">Review</label>
-                            <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3"
-                                required></textarea>
-                            <div class="valid-feedback">Looks Good!</div>
-                        </div>
-                        <input type="hidden" name="album[title]" value="<%= data.name %>">
-                        <input type="hidden" name="album[artist]" value="<%= data.artists[0].name %>">
-                        <input type="hidden" name="album[id]" value="<%= data.id %>">
-                        <button class="btn btn-success">Add Review</button>
-                    </form>
-                    <% for(let review of reviews){ %>
-                        <div class="card mb-3">
-                            <div class="mb-3 card-body pb-0">
-                                <h5 class="card-title">
-                                    <span>
-                                        <a href="/user/<%= review.author._id %>">
-                                            <% if(review.author.profileImage) { %>
-                                                <img src="<%= review.author.profileImage.url %>" class="rounded-circle"
-                                                    id="profile-pic-reviews" alt="">
-                                                <% } %>
-                                                    <%= review.author.username %>
-                                        </a>
-                                    </span>
-                                </h5>
-                                <p class="starability-result" data-rating="<%= review.rating %>">
-                                </p>
-                                <p class="card-text">
-                                    <%= review.body %>
-                                </p>
-                                <% if(review.author.equals(currentUser.dbID)) { %>
-                                    <form action="/album/<%= data.id %>/reviews?_method=DELETE" method="post">
-                                        <button class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                                <path fill-rule="evenodd"
-                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                            </svg></button>
-                                    </form>
-                                    <% } %>
+                <% } else { %>
+                    <div class="text-center">
+                        <form action="/addAlbumToProfile" method="post" class="mb-3">
+                            <input type="hidden" name="title" value="<%= data.name %>">
+                            <input type="hidden" name="artist" value="<%= data.artists[0].name %>">
+                            <input type="hidden" name="id" value="<%= data.id %>">
+                            <input type="hidden" name="url" value="/album/<%= data.id %>">
+                            <button type="submit" class="btn btn-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                    width="16" height="16" fill="currentColor" class="bi bi-plus-lg"
+                                    viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                                </svg> Add To Favorites</button>
+                        </form>
+                    </div>
+                    <% } %>
+                        <!-- Reviews -->
+                        <h3>Write a Review</h3>
+                        <form action="/album/<%= data.id %>/reviews" method="post" class="validated-form mb-3"
+                            novalidate>
+                            <fieldset class="starability-checkmark mb-2">
+                                <legend>Rating:</legend>
+                                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1"
+                                    checked aria-label="No rating." />
+                                <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                                <label for="first-rate1" title="Terrible">1 star</label>
+                                <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                                <label for="first-rate2" title="Not good">2 stars</label>
+                                <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                                <label for="first-rate3" title="Average">3 stars</label>
+                                <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                                <label for="first-rate4" title="Very good">4 stars</label>
+                                <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                                <label for="first-rate5" title="Amazing">5 stars</label>
+                            </fieldset>
+                            <div class="mb-3">
+                                <label class="form-label" for="body">Review</label>
+                                <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3"
+                                    required></textarea>
+                                <div class="valid-feedback">Looks Good!</div>
                             </div>
-                        </div>
-                        <% } %>
+                            <input type="hidden" name="album[title]" value="<%= data.name %>">
+                            <input type="hidden" name="album[artist]" value="<%= data.artists[0].name %>">
+                            <input type="hidden" name="album[id]" value="<%= data.id %>">
+                            <button class="btn btn-success">Add Review</button>
+                        </form>
+                        <% for(let review of reviews){ %>
+                            <div class="card mb-3">
+                                <div class="mb-3 card-body pb-0">
+                                    <h5 class="card-title">
+                                        <span>
+                                            <a href="/user/<%= review.author._id %>">
+                                                <% if(review.author.profileImage) { %>
+                                                    <img src="<%= review.author.profileImage.url %>"
+                                                        class="rounded-circle" id="profile-pic-reviews" alt="">
+                                                    <% } %>
+                                                        <%= review.author.username %>
+                                            </a>
+                                        </span>
+                                    </h5>
+                                    <p class="starability-result" data-rating="<%= review.rating %>">
+                                    </p>
+                                    <p class="card-text">
+                                        <%= review.body %>
+                                    </p>
+                                    <% if(review.author.equals(currentUser.dbID)) { %>
+                                        <form action="/album/<%= data.id %>/reviews?_method=DELETE" method="post">
+                                            <button class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                                    width="16" height="16" fill="currentColor" class="bi bi-trash"
+                                                    viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                    <path fill-rule="evenodd"
+                                                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                </svg></button>
+                                        </form>
+                                        <% } %>
+                                </div>
+                            </div>
+                            <% } %>
+        </div>
     </div>
