@@ -92,3 +92,37 @@ a:hover {
 #review-avg-star {
     color: #fdc500;
 }
+
+.home-card-img {
+    position: relative;
+}
+
+.home-card-img:hover>img,
+.home-card-img>div:hover>img {
+    webkit-filter: blur(6px);
+    /* Chrome, Safari, Opera */
+    filter: blur(6px) invert(25%);
+
+}
+
+.hide-links-unless-hovered>section a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.home-card-img div {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+    bottom: 60%;
+    top: 20%;
+    left: 10%;
+    right: 10%;
+}
+
+.home-card-img:hover div,
+.home-card-img div:hover {
+    visibility: visible;
+    opacity: 1;
+}

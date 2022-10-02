@@ -14,16 +14,33 @@
                         <% for(let j=i*4; j < (i*4)+4; j++) { %>
                             <div class="col-md-3">
                                 <div class="card">
-                                    <iframe style="border-radius:12px"
-                                        src="https://open.spotify.com/embed/track/<%= data.tracks[j].id %>?utm_source=generator"
-                                        width="100%" height="352" frameBorder="0" allowfullscreen="false"
-                                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                        loading="lazy">
-                                    </iframe>
-                                    <!-- <a href="/song/<%= data.tracks[j].id %>" target="_blank">
+                                    <div class="home-card-img">
                                         <img src="<%= data.tracks[j].album.images[1].url %>" class="card-img-top"
                                             alt="">
-                                    </a> -->
+
+                                        <div class="hide-links-unless-hovered">
+                                            <section>
+                                                <h3>
+                                                    <a href="/song/<%= data.tracks[j].id %>">Listen on
+                                                        MyTunes</a>
+                                                </h3>
+                                            </section>
+                                            <hr>
+                                            <section>
+                                                <h3>
+                                                    <a href="<%= data.tracks[j].external_urls.spotify %>"
+                                                        target="_blank">Listen
+                                                        on
+                                                        Spotify <svg xmlns="http://www.w3.org/2000/svg" width="28"
+                                                            height="28" fill="currentColor" class="bi bi-spotify mx-2"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.669 11.538a.498.498 0 0 1-.686.165c-1.879-1.147-4.243-1.407-7.028-.77a.499.499 0 0 1-.222-.973c3.048-.696 5.662-.397 7.77.892a.5.5 0 0 1 .166.686zm.979-2.178a.624.624 0 0 1-.858.205c-2.15-1.321-5.428-1.704-7.972-.932a.625.625 0 0 1-.362-1.194c2.905-.881 6.517-.454 8.986 1.063a.624.624 0 0 1 .206.858zm.084-2.268C10.154 5.56 5.9 5.419 3.438 6.166a.748.748 0 1 1-.434-1.432c2.825-.857 7.523-.692 10.492 1.07a.747.747 0 1 1-.764 1.288z" />
+                                                        </svg></a>
+                                                </h3>
+                                            </section>
+                                        </div>
+                                    </div>
                                     <div class="card-body">
                                         <h6 class="card-title">
                                             <a href="/song/<%= data.tracks[j].id %>" target="_blank">
@@ -41,44 +58,16 @@
                     <% } %>
                         <nav class="w-25 text-center mx-auto" aria-label="Page navigation">
                             <ul class="pagination pagination-lg">
-                                <% if(currentPage===1 ){ %>
-                                    <li class="page-item disabled" tabindex="-1">
-                                        <a class="page-link" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-                                    <% } else { %>
-                                        <li class="page-item">
-                                            <a class="page-link" href="/page/<%= currentPage-1 %>"
-                                                aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        <% } %>
-                                            <li class="page-item<%= currentPage === 1 ? ' active' : '' %>"><a
-                                                    class="page-link" href="/page/1">1</a></li>
-                                            <li class="page-item<%= currentPage === 2 ? ' active' : '' %>"><a
-                                                    class="page-link" href="/page/2">2</a></li>
-                                            <li class="page-item<%= currentPage === 3 ? ' active' : '' %>"><a
-                                                    class="page-link" href="/page/3">3</a></li>
-                                            <li class="page-item<%= currentPage === 4 ? ' active' : '' %>"><a
-                                                    class="page-link" href="/page/4">4</a></li>
-                                            <li class="page-item<%= currentPage === 5 ? ' active' : '' %>"><a
-                                                    class="page-link" href="/page/5">5</a></li>
-                                            <% if(currentPage===5 ){ %>
-                                                <li class="page-item disabled" tabindex="-1">
-                                                    <a class="page-link" aria-label="Next">
-                                                        <span aria-hidden="true">&raquo;</span>
-                                                    </a>
-                                                </li>
-                                                <% } else { %>
-                                                    <li class="page-item">
-                                                        <a class="page-link" href="/page/<%= currentPage+1 %>"
-                                                            aria-label="Next">
-                                                            <span aria-hidden="true">&raquo;</span>
-                                                        </a>
-                                                    </li>
-                                                    <% } %>
+                                <li class="page-item<%= currentPage === 1 ? ' active' : '' %>"><a class="page-link"
+                                        href="/page/1">1</a></li>
+                                <li class="page-item<%= currentPage === 2 ? ' active' : '' %>"><a class="page-link"
+                                        href="/page/2">2</a></li>
+                                <li class="page-item<%= currentPage === 3 ? ' active' : '' %>"><a class="page-link"
+                                        href="/page/3">3</a></li>
+                                <li class="page-item<%= currentPage === 4 ? ' active' : '' %>"><a class="page-link"
+                                        href="/page/4">4</a></li>
+                                <li class="page-item<%= currentPage === 5 ? ' active' : '' %>"><a class="page-link"
+                                        href="/page/5">5</a></li>
                             </ul>
                         </nav>
                         <% } else { %>

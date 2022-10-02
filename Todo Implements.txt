@@ -1,6 +1,4 @@
 -Add image upload process to new user registration
--Add i popover next to popularity
 -Add search for users
--Change display format of release date
--Fix access token expiration error
+-Fix access token expiration error (i think i fixed it but not sure)
 -Make a good looking 404 not found page

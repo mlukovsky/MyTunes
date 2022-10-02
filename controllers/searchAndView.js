@@ -3,36 +3,58 @@ const User = require('../models/user')
 const Review = require('../models/review')
 //token is spotify API access token. results will hold search results
 let token = ''
+let lastTokenReqTime = 0;
 
 const results = {
     titles: new Set(),
     ids: []
 };
 
+const monthMap = new Map();
+monthMap.set('01', 'January');
+monthMap.set('02', 'February');
+monthMap.set('03', 'March');
+monthMap.set('04', 'April');
+monthMap.set('05', 'May')
+monthMap.set('06', 'June')
+monthMap.set('07', 'July')
+monthMap.set('08', 'August')
+monthMap.set('09', 'September')
+monthMap.set('10', 'October')
+monthMap.set('11', 'November')
+monthMap.set('12', 'December')
+
+const getToken = async () => {
+    await axios({
+        url: 'https://accounts.spotify.com/api/token',
+        method: 'post',
+        params: {
+            grant_type: 'client_credentials'
+        },
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        auth: {
+            username: process.env.SPOTIFY_CLIENT_ID,
+            password: process.env.SPOTIFY_CLIENT_SECRET
+        }
+    }).then(function (response) {
+        lastTokenReqTime = Date.now();
+        token = response.data.access_token
+    }).catch(function (error) {
+        console.log(error)
+    });
+}
 
 //HOME PAGE WITH RECOMMENDED TRACKS
 module.exports.homePageWithContent = async (req, res) => {
     if (req.user) {
         if (!token) {
-            await axios({
-                url: 'https://accounts.spotify.com/api/token',
-                method: 'post',
-                params: {
-                    grant_type: 'client_credentials'
-                },
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                auth: {
-                    username: process.env.SPOTIFY_CLIENT_ID,
-                    password: process.env.SPOTIFY_CLIENT_SECRET
-                }
-            }).then(function (response) {
-                token = response.data.access_token
-            }).catch(function (error) {
-                console.log(error)
-            });
+            await getToken();
+        } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
+            //Access token is valid for an hour, so if at least an hour has passed(in milliseconds) since the last request, get a new token
+            await getToken();
         }
         const currentPage = parseInt(req.params.number, 10);
         const idArray = []
@@ -80,16 +102,25 @@ module.exports.homePageNoContent = async (req, res) => {
     res.render('home', { hasContent: false })
 }
 
-//Show user profile by ID and request access token
+//Request access token and Show user profile by ID
 module.exports.userProfile = async (req, res) => {
-
+    if (!token) {
+        getToken();
+    } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
+        getToken();
+    }
     console.log(token)
     const user = await User.findById(req.params.id).populate('reviews')
     res.render('users/profile', { user })
 }
 
 //Request access token and Render Search page
-module.exports.searchForm = (req, res) => {
+module.exports.searchForm = async (req, res) => {
+    if (!token) {
+        getToken();
+    } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
+        getToken();
+    }
     console.log(token)
     console.log(results)
     res.render('search/search', { results })
@@ -172,6 +203,11 @@ module.exports.displaySearchResults = (req, res) => {
 
 //View song by ID
 module.exports.viewSong = async (req, res) => {
+    if (!token) {
+        getToken();
+    } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
+        getToken();
+    }
     const { id } = req.params;
     const user = await User.findOne({ uri: req.user.id })
     //Determine if the user has the currently viewed song in their favorites
@@ -195,7 +231,9 @@ module.exports.viewSong = async (req, res) => {
         }
     }).then(function (response) {
         const data = response.data;
-        res.render('song/show', { data, reviews, reviewAverage, count, isFavorite })
+        const releaseDate = data.album.release_date;
+        const parsedDate = (data.album.release_date_precision === 'year') ? releaseDate : monthMap.get(releaseDate.substring(5, 7)) + ' ' + parseInt(releaseDate.substring(8, 10)) + ', ' + releaseDate.substring(0, 4)
+        res.render('song/show', { data, parsedDate, reviews, reviewAverage, count, isFavorite })
     }).catch(function (error) {
         console.log(error)
     })
@@ -203,6 +241,11 @@ module.exports.viewSong = async (req, res) => {
 
 //View album by ID
 module.exports.viewAlbum = async (req, res) => {
+    if (!token) {
+        getToken();
+    } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
+        getToken();
+    }
     const { id } = req.params;
     const user = await User.findOne({ uri: req.user.id })
     //Determine if the user has the currently viewed album in their favorites
@@ -226,7 +269,9 @@ module.exports.viewAlbum = async (req, res) => {
         }
     }).then(function (response) {
         const data = response.data;
-        res.render('album/show', { data, reviews, reviewAverage, count, isFavorite })
+        const releaseDate = data.release_date;
+        const parsedDate = monthMap.get(releaseDate.substring(5, 7)) + ' ' + parseInt(releaseDate.substring(8, 10)) + ', ' + releaseDate.substring(0, 4)
+        res.render('album/show', { data, parsedDate, reviews, reviewAverage, count, isFavorite })
     }).catch(function (error) {
         console.log(error)
     })
@@ -234,6 +279,11 @@ module.exports.viewAlbum = async (req, res) => {
 
 //View artist by ID
 module.exports.viewArtist = async (req, res) => {
+    if (!token) {
+        getToken();
+    } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
+        getToken();
+    }
     const { id } = req.params;
     const user = await User.findOne({ uri: req.user.id })
     //Determine if the user has the currently viewed artist in their favorites
