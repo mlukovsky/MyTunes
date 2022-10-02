@@ -36,7 +36,7 @@ router.route('/registerAuthd')
     //After connecting with spotify, render form where new user can choose a username and email
     .get(users.registerAuthdForm)
     //create new user in database
-    .post(catchAsync(users.registerAuthdUser))
+    .post(upload.single('picture'), catchAsync(users.registerAuthdUser))
 
 router.route('/profileImg')
     .post(upload.single('image'), catchAsync(users.addProfileImg))

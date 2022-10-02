@@ -14,13 +14,14 @@ const passport = require('passport');
 const SpotifyStrategy = require('passport-spotify').Strategy;
 const axios = require('axios')
 const User = require('./models/user')
-
 const ExpressError = require('./helpers/ExpressError')
 const { isLoggedIn } = require('./middleware')
+const mongoSanitize = require('express-mongo-sanitize')
+const helmet = require('helmet')
+const MongoStore = require('connect-mongo')
 
-
-
-mongoose.connect('mongodb://localhost:27017/my-tunes', {
+// 'mongodb://localhost:27017/my-tunes'
+mongoose.connect(process.env.DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -31,7 +32,15 @@ db.once('open', () => {
     console.log("Database connected");
 });
 
+const store = new MongoStore({
+    mongoUrl: process.env.DB_URL,
+    secret: 'abadsecret',
+    touchAfter: 24 * 3600
+});
 
+store.on("error", function (err) {
+    console.log("SESSION STORE ERROR", err)
+})
 
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
@@ -40,7 +49,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(methodOverride('_method'))
 const sessionConfig = {
+    name: process.env.SESSION_NAME,
     secret: 'abadsecret',
+    store,
     resave: true,
     rolling: true,
     saveUninitialized: true,
@@ -53,6 +64,41 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig))
 app.use(flash())
+app.use(mongoSanitize())
+app.use(helmet({ crossOriginEmbedderPolicy: false }))
+
+const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+    "https://unpkg.com/"
+]
+
+const styleSrcUrls = [
+    "https://stackpath.bootstrapcdn.com/",
+    "https://cdn.jsdelivr.net/"
+]
+
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: [],
+        connectSrc: ["'self'", "https://api.spotify.com/", "https://stats.g.doubleclick.net/j/"],
+        frameSrc: ["https://open.spotify.com/"],
+        scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+        styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+        workerSrc: ["'self'", "blob:"],
+        objectSrc: [],
+        imgSrc: [
+            "'self'",
+            "blob:",
+            "data:",
+            `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`,
+            "https://i.scdn.co/"
+        ],
+        fontSrc: ["'self'"],
+        formAction: ["'self'", "https://accounts.spotify.com/"]
+    }
+}))
 
 passport.serializeUser(function (user, done) {
     done(null, user);
@@ -86,8 +132,11 @@ app.use((req, res, next) => {
 //Adds the current logged in user's provided name and id stored in database to the req.user object. Used for displaying profile name in the navbar and 
 //id for the link to the user profile
 app.use(async function (req, res, next) {
+    let foundUser;
     if (req.user) {
-        const foundUser = await User.findOne({ uri: req.user.id })
+        foundUser = await User.findOne({ uri: req.user.id })
+    }
+    if (foundUser) {
         req.user.profileName = foundUser.username;
         req.user.dbID = foundUser._id;
         if (foundUser.profileImage) {

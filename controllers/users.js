@@ -52,17 +52,33 @@ module.exports.registerUser = (req, res) => {
 }
 
 //After connecting with spotify, render form where new user can choose a username and email
-module.exports.registerAuthdForm = (req, res) => {
-    const displayName = req.user.displayName
+module.exports.registerAuthdForm = async (req, res) => {
+    registering = false;
+    const user = await User.findOne({ uri: req.user.id });
+    if (user) {
+        req.flash('success', `Welcome back, ${user.username}`);
+        return res.redirect('/');
+    }
+    const displayName = (req.user !== null) ? req.user.displayName : '';
     res.render('users/register', { registering, displayName })
 }
 
 //create new user in database
 module.exports.registerAuthdUser = async (req, res) => {
-    registering = false;
     const { name, email } = req.body;
     const { provider, id, uri } = req.user;
-    const user = new User({ email, username: name, platform: provider, uri: id });
+    const user = new User({
+        email,
+        username: name,
+        platform: provider,
+        uri: id
+    });
+    if (req.file) {
+        user.profileImage = {
+            url: req.file.path,
+            filename: req.file.filename
+        }
+    }
     await user.save();
     req.flash('success', `Welcome, ${name}!`)
     res.redirect('/')
