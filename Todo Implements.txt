@@ -1,4 +1,0 @@
--Add search for users
--Fix access token expiration error (i think i fixed it but not sure)
--Make a good looking 404 not found page
--Make a landing page for new users
