@@ -31,7 +31,7 @@ footer {
     width: 1em
 }
 
-#auth-page {
+#centered-both-ways {
     position: absolute;
     top: 30%;
     left: 20%;
@@ -55,9 +55,11 @@ footer {
 }
 
 .home-link a {
-    text-decoration: underline;
-    text-decoration-thickness: 1.5px;
     font-weight: lighter;
+}
+
+.home-link a:hover {
+    text-decoration: none;
 }
 
 a {
@@ -137,4 +139,9 @@ a:hover {
 .home-card-img div:hover {
     visibility: visible;
     opacity: 1;
+}
+
+#profile-fav-link,
+.profile-delete-music-btn {
+    display: inline-block;
 }

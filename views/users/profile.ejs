@@ -2,6 +2,7 @@
     <title>
         <%= user.username %> - MyTunes
     </title>
+    <link rel="stylesheet" href="/stylesheets/starability/stars.css">
     <h1>
         <%= user.username %>
     </h1>
@@ -46,9 +47,25 @@
                         aria-labelledby="nav-songs-tab" tabindex="0">
                         <% for(let song of user.songs) { %>
                             <div class="mb-2">
-                                <a href="/song/<%= song.id %>">
+                                <a href="/song/<%= song.id %>" id="profile-fav-link">
                                     <%= song.artist %> - <%= song.title %>
                                 </a>
+                                <% if(user.uri===currentUser.id){ %>
+                                    <form action="/deleteSongFromProfile?_method=DELETE" method="post"
+                                        class="profile-delete-music-btn">
+                                        <input type="hidden" name="title" value="<%= song.title %>">
+                                        <input type="hidden" name="id" value="<%= song.id %>">
+                                        <input type="hidden" name="url" value="/user/<%= user._id %>">
+                                        <button type="submit" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                                width="16" height="16" fill="currentColor" class="bi bi-trash"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                            </svg></button>
+                                    </form>
+                                    <% } %>
                             </div>
                             <% } %>
                     </div>
@@ -56,9 +73,25 @@
                         tabindex="0">
                         <% for(let artist of user.artists) { %>
                             <div class="mb-2">
-                                <a href="/artist/<%= artist.id %>">
+                                <a href="/artist/<%= artist.id %>" id="profile-fav-link">
                                     <%= artist.name %>
                                 </a>
+                                <% if(user.uri===currentUser.id){ %>
+                                    <form action="/deleteArtistFromProfile?_method=DELETE" method="post"
+                                        class="profile-delete-music-btn">
+                                        <input type="hidden" name="name" value="<%= artist.name %>">
+                                        <input type="hidden" name="id" value="<%= artist.id %>">
+                                        <input type="hidden" name="url" value="/user/<%= user._id %>">
+                                        <button type="submit" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                                width="16" height="16" fill="currentColor" class="bi bi-trash"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                            </svg></button>
+                                    </form>
+                                    <% } %>
                             </div>
                             <% } %>
                     </div>
@@ -66,9 +99,25 @@
                         tabindex="0">
                         <% for(let album of user.albums) { %>
                             <div class="mb-2">
-                                <a href="/album/<%= album.id %>">
+                                <a href="/album/<%= album.id %>" id="profile-fav-link">
                                     <%= album.title %> by <%= album.artist %>
                                 </a>
+                                <% if(user.uri===currentUser.id){ %>
+                                    <form action="/deleteAlbumFromProfile?_method=DELETE" method="post"
+                                        class="profile-delete-music-btn">
+                                        <input type="hidden" name="title" value="<%= album.title %>">
+                                        <input type="hidden" name="id" value="<%= album.id %>">
+                                        <input type="hidden" name="url" value="/user/<%= user._id %>">
+                                        <button type="submit" class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                                width="16" height="16" fill="currentColor" class="bi bi-trash"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                            </svg></button>
+                                    </form>
+                                    <% } %>
                             </div>
                             <% } %>
                     </div>
@@ -76,37 +125,90 @@
                         tabindex="0">
                         <% for(let review of user.reviews){ %>
                             <% if(review.song) { %>
-                                <div class="mb-2">
-                                    <h5 class="h5">For <a href="/song/<%= review.song.id %>">
-                                            <%= review.song.artist %> - <%= review.song.title %>
-                                        </a>
-                                    </h5>
-                                    <p>
-                                        <%= review.rating %>
-                                    </p>
-                                    <%= review.body %>
-                                </div>
-                                <% } else if(review.album) { %>
-                                    <div class="mb-2">
-                                        <h5 class="h5">For <a href="/album/<%= review.album.id %>">
-                                                <%= review.album.title %> by <%= review.album.artist %>
+                                <div class="row">
+                                    <div class="mb-2 border-bottom w-75">
+                                        <h5 class="h5">For <a href="/song/<%= review.song.id %>">
+                                                <%= review.song.artist %> - <%= review.song.title %>
                                             </a>
                                         </h5>
-                                        <p>
-                                            <%= review.rating %>
+                                        <p class="starability-result" data-rating="<%= review.rating %>">
                                         </p>
                                         <%= review.body %>
                                     </div>
-                                    <% } else { %>
-                                        <div class="mb-2">
-                                            <h5 class="h5">For <a href="/artist/<%= review.artist.id %>">
-                                                    <%= review.artist.name %>
+                                    <% if(review.author.equals(currentUser.dbID)) { %>
+                                        <div class="col-2">
+                                            <form action="/song/<%= review.song.id %>/reviews?_method=DELETE"
+                                                method="post">
+                                                <input type="hidden" name="url" value="/user/<%= user._id %>">
+                                                <button class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                                        width="16" height="16" fill="currentColor" class="bi bi-trash"
+                                                        viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                        <path fill-rule="evenodd"
+                                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                    </svg></button>
+                                            </form>
+                                        </div>
+                                        <% } %>
+                                </div>
+                                <% } else if(review.album) { %>
+                                    <div class="row">
+                                        <div class="mb-2 border-bottom w-75">
+                                            <h5 class="h5">For <a href="/album/<%= review.album.id %>">
+                                                    <%= review.album.title %> by <%= review.album.artist %>
                                                 </a>
                                             </h5>
-                                            <p>
-                                                <%= review.rating %>
+                                            <p class="starability-result" data-rating="<%= review.rating %>">
                                             </p>
                                             <%= review.body %>
+                                        </div>
+                                        <% if(review.author.equals(currentUser.dbID)) { %>
+                                            <div class="col-2">
+                                                <form action="/album/<%= review.album.id %>/reviews?_method=DELETE"
+                                                    method="post">
+                                                    <input type="hidden" name="url" value="/user/<%= user._id %>">
+                                                    <button class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
+                                                            width="16" height="16" fill="currentColor"
+                                                            class="bi bi-trash" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                            <path fill-rule="evenodd"
+                                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                        </svg></button>
+                                                </form>
+                                            </div>
+                                            <% } %>
+                                    </div>
+                                    <% } else { %>
+                                        <div class="row">
+                                            <div class="mb-2 border-bottom w-75">
+                                                <h5 class="h5">For <a href="/artist/<%= review.artist.id %>">
+                                                        <%= review.artist.name %>
+                                                    </a>
+                                                </h5>
+                                                <p class="starability-result" data-rating="<%= review.rating %>">
+                                                </p>
+                                                <%= review.body %>
+                                            </div>
+                                            <% if(review.author.equals(currentUser.dbID)) { %>
+                                                <div class="col-2">
+                                                    <form
+                                                        action="/artist/<%= review.artist.id %>/reviews?_method=DELETE"
+                                                        method="post">
+                                                        <input type="hidden" name="url" value="/user/<%= user._id %>">
+                                                        <button class="btn btn-sm"><svg
+                                                                xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-trash"
+                                                                viewBox="0 0 16 16">
+                                                                <path
+                                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                                <path fill-rule="evenodd"
+                                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                                            </svg></button>
+                                                    </form>
+                                                </div>
+                                                <% } %>
                                         </div>
                                         <% } %>
                                             <% } %>

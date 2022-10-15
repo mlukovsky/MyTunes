@@ -1,0 +1,25 @@
+<% layout('layouts/boilerplate') %>
+    <title>
+        <%= err.statusCode %> Error
+    </title>
+    <div class="row">
+        <div class="col-6 offset-3 text-center">
+            <div id="centered-both-ways">
+                <h1 class="display-1 fw-bold">
+                    <%= err.statusCode%>
+                </h1>
+                <% if(err.statusCode===404 ) { %>
+                    <p class="fs-3"> <span class="text-danger">Oops!</span> Page not found.</p>
+                    <p class="lead">
+                        The page you're looking for doesn't exist.
+                    </p>
+                    <% } else{ %>
+                        <p class="fs-3">
+                            <span class="text-danger">Oops!</span> Something Went Wrong.
+                        </p>
+                        </p>
+                        <% } %>
+                            <a href="/" class="btn btn-primary">Go Home</a>
+            </div>
+        </div>
+    </div>

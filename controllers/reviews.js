@@ -22,7 +22,7 @@ module.exports.deleteSongReview = async (req, res) => {
     await User.findOneAndUpdate({ uri: req.user.id }, { $pull: { reviews: review._id } })
     await Review.findByIdAndDelete(review._id)
     req.flash('success', 'Successfully deleted review!')
-    res.redirect(`/song/${id}`)
+    res.redirect(req.body.url)
 }
 
 module.exports.writeAlbumReview = async (req, res) => {
@@ -47,7 +47,7 @@ module.exports.deleteAlbumReview = async (req, res) => {
     await User.findOneAndUpdate({ uri: req.user.id }, { $pull: { reviews: review._id } })
     await Review.findByIdAndDelete(review._id)
     req.flash('success', 'Successfully deleted review!')
-    res.redirect(`/album/${id}`)
+    res.redirect(req.body.url)
 }
 
 module.exports.writeArtistReview = async (req, res) => {
@@ -72,5 +72,5 @@ module.exports.deleteArtistReview = async (req, res) => {
     await User.findOneAndUpdate({ uri: req.user.id }, { $pull: { reviews: review._id } })
     await Review.findByIdAndDelete(review._id)
     req.flash('success', 'Successfully deleted review!')
-    res.redirect(`/artist/${id}`)
+    res.redirect(req.body.url)
 }

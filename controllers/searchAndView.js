@@ -110,16 +110,21 @@ module.exports.userProfile = async (req, res) => {
         getToken();
     }
     console.log(token)
-    const user = await User.findById(req.params.id).populate('reviews')
-    res.render('users/profile', { user })
+    try {
+        const user = await User.findById(req.params.id).populate('reviews')
+        res.render('users/profile', { user })
+    } catch (err) {
+        err.statusCode = 404;
+        res.render('error', { err })
+    }
 }
 
 //Request access token and Render Search page
 module.exports.searchForm = async (req, res) => {
     if (!token) {
-        getToken();
+        await getToken();
     } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
-        getToken();
+        await getToken();
     }
     console.log(token)
     console.log(results)
@@ -204,9 +209,9 @@ module.exports.displaySearchResults = (req, res) => {
 //View song by ID
 module.exports.viewSong = async (req, res) => {
     if (!token) {
-        getToken();
+        await getToken();
     } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
-        getToken();
+        await getToken();
     }
     const { id } = req.params;
     const user = await User.findOne({ uri: req.user.id })
@@ -234,17 +239,18 @@ module.exports.viewSong = async (req, res) => {
         const releaseDate = data.album.release_date;
         const parsedDate = (data.album.release_date_precision === 'year') ? releaseDate : monthMap.get(releaseDate.substring(5, 7)) + ' ' + parseInt(releaseDate.substring(8, 10)) + ', ' + releaseDate.substring(0, 4)
         res.render('song/show', { data, parsedDate, reviews, reviewAverage, count, isFavorite })
-    }).catch(function (error) {
-        console.log(error)
+    }).catch(function (err) {
+        err.statusCode = 404;
+        res.render('error', { err })
     })
 }
 
 //View album by ID
 module.exports.viewAlbum = async (req, res) => {
     if (!token) {
-        getToken();
+        await getToken();
     } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
-        getToken();
+        await getToken();
     }
     const { id } = req.params;
     const user = await User.findOne({ uri: req.user.id })
@@ -270,19 +276,20 @@ module.exports.viewAlbum = async (req, res) => {
     }).then(function (response) {
         const data = response.data;
         const releaseDate = data.release_date;
-        const parsedDate = monthMap.get(releaseDate.substring(5, 7)) + ' ' + parseInt(releaseDate.substring(8, 10)) + ', ' + releaseDate.substring(0, 4)
+        const parsedDate = (data.release_date_precision === 'year') ? releaseDate : monthMap.get(releaseDate.substring(5, 7)) + ' ' + parseInt(releaseDate.substring(8, 10)) + ', ' + releaseDate.substring(0, 4)
         res.render('album/show', { data, parsedDate, reviews, reviewAverage, count, isFavorite })
-    }).catch(function (error) {
-        console.log(error)
+    }).catch(function (err) {
+        err.statusCode = 404;
+        res.render('error', { err })
     })
 }
 
 //View artist by ID
 module.exports.viewArtist = async (req, res) => {
     if (!token) {
-        getToken();
+        await getToken();
     } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
-        getToken();
+        await getToken();
     }
     const { id } = req.params;
     const user = await User.findOne({ uri: req.user.id })
@@ -349,7 +356,8 @@ module.exports.viewArtist = async (req, res) => {
     }).then(function (response) {
         relatedArtists = response.data;
         res.render('artist/show', { artistData, topTracks, albums, relatedArtists, reviews, reviewAverage, count, isFavorite })
-    }).catch(function (error) {
-        console.log(error)
+    }).catch(function (err) {
+        err.statusCode = 404;
+        res.render('error', { err })
     })
 }

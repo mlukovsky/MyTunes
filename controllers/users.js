@@ -33,6 +33,7 @@ module.exports.loginUser = (req, res) => {
 
 //Logout User
 module.exports.logoutUser = (req, res, next) => {
+    registering = false;
     req.logout(err => {
         if (err) { return next(err); }
         //req.flash('success', 'You have been logged out')
@@ -53,7 +54,6 @@ module.exports.registerUser = (req, res) => {
 
 //After connecting with spotify, render form where new user can choose a username and email
 module.exports.registerAuthdForm = async (req, res) => {
-    registering = false;
     const user = await User.findOne({ uri: req.user.id });
     if (user) {
         req.flash('success', `Welcome back, ${user.username}`);
@@ -65,6 +65,12 @@ module.exports.registerAuthdForm = async (req, res) => {
 
 //create new user in database
 module.exports.registerAuthdUser = async (req, res) => {
+    const usernameExists = await User.findOne({ username: req.body.name }).count() > 0 ? true : false
+    if (usernameExists) {
+        req.flash('error', 'That username already exists. Please choose a different one.')
+        return res.redirect('/registerAuthd')
+    }
+    registering = false;
     const { name, email } = req.body;
     const { provider, id, uri } = req.user;
     const user = new User({

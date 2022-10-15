@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %>
     <title>MyTunes</title>
     <% if(!currentUser){ %>
-        <div class="text-center">
+        <div class="text-center" id="centered-both-ways">
             <h1 class="home-link"><a href="/login">Sign In</a></h1>
             <h4 class="home-link">Don't have an account yet? <a href="/register"> Sign Up</a></h2>
         </div>
@@ -43,10 +43,9 @@
                                     </div>
                                     <div class="card-body">
                                         <h6 class="card-title">
-                                            <a href="/song/<%= data.tracks[j].id %>" target="_blank">
+                                            <a href="/song/<%= data.tracks[j].id %>">
                                                 <%= data.tracks[j].name %>
-                                            </a> by <a href="/artist/<%= data.tracks[j].artists[0].id %>"
-                                                target="_blank">
+                                            </a> by <a href="/artist/<%= data.tracks[j].artists[0].id %>">
                                                 <%= data.tracks[j].artists[0].name %>
                                             </a>
                                         </h6>
@@ -71,10 +70,12 @@
                             </ul>
                         </nav>
                         <% } else { %>
-                            <div>
-                                <h2 class="text-center home-link">You don't have any Tunes right now.
-                                    <div>
-                                        <a href="/search">Search for Music</a>
+                            <div id="centered-both-ways">
+                                <h2 class="text-center">You don't have any favorites right now.
+                                    <div class="mt-3">
+                                        <button class="btn btn-lg btn-outline-primary home-link p-1">
+                                            <a href="/search">Search for Music</a>
+                                        </button>
                                     </div>
                                 </h2>
                             </div>

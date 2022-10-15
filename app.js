@@ -95,7 +95,7 @@ app.use(helmet.contentSecurityPolicy({
             `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`,
             "https://i.scdn.co/"
         ],
-        fontSrc: ["'self'"],
+        fontSrc: ["'self'", "https://open.spotifycdn.com/fonts/"],
         formAction: ["'self'", "https://accounts.spotify.com/"]
     }
 }))
@@ -159,6 +159,13 @@ app.use('/', userRoutes, searchAndViewRoutes, reviewRoutes, favoriteRoutes)
 //For requests to nonexistent routes
 app.all('*', (req, res, next) => {
     next(new ExpressError(404, 'Page Not Found'))
+})
+
+//ERROR HANDLER
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = 'Something went wrong!'
+    res.status(statusCode).render('error', { err })
 })
 
 app.listen(process.env.PORT, () => {

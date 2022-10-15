@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/stylesheets/starability/stars.css">
 
     <div class="row">
-        <div class="col-5">
+        <div class="col-md-5">
             <div class="card mb-3">
                 <!-- Embedded song player -->
                 <iframe style="border-radius:12px"
@@ -38,7 +38,7 @@
                 <% } %>
         </div>
         <div class="col-1"></div>
-        <div class="col-5">
+        <div class="col-md-5">
             <small class="text-center mb-6">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
@@ -146,6 +146,7 @@
                                     </p>
                                     <% if(review.author.equals(currentUser.dbID)) { %>
                                         <form action="/song/<%= data.id %>/reviews?_method=DELETE" method="post">
+                                            <input type="hidden" name="url" value="/song/<%= data.id %>">
                                             <button class="btn btn-sm"><svg xmlns="http://www.w3.org/2000/svg"
                                                     width="16" height="16" fill="currentColor" class="bi bi-trash"
                                                     viewBox="0 0 16 16">
