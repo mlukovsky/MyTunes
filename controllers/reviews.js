@@ -17,7 +17,6 @@ module.exports.writeSongReview = async (req, res) => {
 module.exports.deleteSongReview = async (req, res) => {
     const { id } = req.params;
     const review = await Review.findOne({ 'song.id': id })
-    console.log(review)
     //removes anything out of the User object's reviews array that matches reviewID
     await User.findOneAndUpdate({ uri: req.user.id }, { $pull: { reviews: review._id } })
     await Review.findByIdAndDelete(review._id)
@@ -42,7 +41,6 @@ module.exports.writeAlbumReview = async (req, res) => {
 module.exports.deleteAlbumReview = async (req, res) => {
     const { id } = req.params;
     const review = await Review.findOne({ 'album.id': id })
-    console.log(review)
     //removes anything out of the User object's reviews array that matches reviewID
     await User.findOneAndUpdate({ uri: req.user.id }, { $pull: { reviews: review._id } })
     await Review.findByIdAndDelete(review._id)
@@ -67,7 +65,6 @@ module.exports.writeArtistReview = async (req, res) => {
 module.exports.deleteArtistReview = async (req, res) => {
     const { id } = req.params;
     const review = await Review.findOne({ 'artist.id': id })
-    console.log(review)
     //removes anything out of the User object's reviews array that matches reviewID
     await User.findOneAndUpdate({ uri: req.user.id }, { $pull: { reviews: review._id } })
     await Review.findByIdAndDelete(review._id)

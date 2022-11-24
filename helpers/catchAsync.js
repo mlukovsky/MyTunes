@@ -1,4 +1,4 @@
-//All this does is catch errors in async functions and pass them to next
+//Catches errors in async functions and passes them to next
 
 module.exports = func => {
     //pass in func

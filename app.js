@@ -32,9 +32,11 @@ db.once('open', () => {
     console.log("Database connected");
 });
 
+const secret = process.env.SECRET;
+
 const store = new MongoStore({
     mongoUrl: process.env.DB_URL,
-    secret: 'abadsecret',
+    secret,
     touchAfter: 24 * 3600
 });
 
@@ -50,7 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(methodOverride('_method'))
 const sessionConfig = {
     name: process.env.SESSION_NAME,
-    secret: 'abadsecret',
+    secret,
     store,
     resave: true,
     rolling: true,

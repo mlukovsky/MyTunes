@@ -109,7 +109,6 @@ module.exports.userProfile = async (req, res) => {
     } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
         getToken();
     }
-    console.log(token)
     try {
         const user = await User.findById(req.params.id).populate('reviews')
         res.render('users/profile', { user })
@@ -126,8 +125,7 @@ module.exports.searchForm = async (req, res) => {
     } else if (token && Date.now() - lastTokenReqTime >= 3600000) {
         await getToken();
     }
-    console.log(token)
-    console.log(results)
+
     res.render('search/search', { results })
 }
 
@@ -187,7 +185,6 @@ module.exports.getSearchResults = (req, res) => {
                 results.ids.push(item.id)
             }
         }
-        console.log(results)
         //GET QUERY STRING FOR URL TO DISPLAY SEARCH RESULTS
         if (type === 'tracks') {
             res.redirect(`/search/${response.data.tracks.href.slice(response.data.tracks.href.indexOf('query'))}`)
