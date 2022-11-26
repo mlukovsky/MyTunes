@@ -14,9 +14,9 @@
     "mongoose": "^6.5.2",
     "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
+    "nodemon": "^2.0.20",
     "passport": "^0.6.0",
-    "passport-spotify": "^2.0.0",
-    "nodemon": "^2.0.18"
+    "passport-spotify": "^2.0.0"
   },
   "name": "mytunes",
   "version": "1.0.0",
