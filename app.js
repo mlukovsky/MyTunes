@@ -34,7 +34,7 @@ db.once('open', () => {
 
 const secret = process.env.SECRET;
 
-const store = new MongoStore({
+const store = MongoStore.create({
     mongoUrl: process.env.DB_URL,
     secret,
     touchAfter: 24 * 3600
