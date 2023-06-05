@@ -18,7 +18,7 @@ const ExpressError = require('./helpers/ExpressError')
 const { isLoggedIn } = require('./middleware')
 const mongoSanitize = require('express-mongo-sanitize')
 const helmet = require('helmet')
-const MongoStore = require('connect-mongo')
+// const MongoStore = require('connect-mongo')
 
 // 'mongodb://localhost:27017/my-tunes'
 mongoose.connect(process.env.DB_URL, {
@@ -34,15 +34,15 @@ db.once('open', () => {
 
 const secret = process.env.SECRET;
 
-const store = MongoStore.create({
-    mongoUrl: process.env.DB_URL,
-    secret,
-    touchAfter: 24 * 3600
-});
+// const store = MongoStore.create({
+//     mongoUrl: process.env.DB_URL,
+//     secret,
+//     touchAfter: 24 * 3600
+// });
 
-store.on("error", function (err) {
-    console.log("SESSION STORE ERROR", err)
-})
+// store.on("error", function (err) {
+//     console.log("SESSION STORE ERROR", err)
+// })
 
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs');
@@ -53,7 +53,7 @@ app.use(methodOverride('_method'))
 const sessionConfig = {
     name: process.env.SESSION_NAME,
     secret,
-    store,
+    // store,
     resave: true,
     rolling: true,
     saveUninitialized: true,
