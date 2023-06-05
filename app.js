@@ -112,7 +112,7 @@ passport.deserializeUser(function (user, done) {
 passport.use(new SpotifyStrategy({
     clientID: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-    callbackURL: `http://localhost:${process.env.PORT}/auth/spotify/callback`
+    callbackURL: process.env.NODE_ENV === 'production' ? 'https://mytunes.onrender.com/auth/spotify/callback' : `http://localhost:${process.env.PORT}/auth/spotify/callback`
 },
     function (accessToken, refreshToken, profile, done) {
         return done(null, profile);
