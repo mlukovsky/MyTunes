@@ -52,7 +52,7 @@ const sessionConfig = {
     name: process.env.SESSION_NAME,
     secret,
     store,
-    resave: true,
+    resave: false,
     rolling: true,
     saveUninitialized: true,
     cookie: {
@@ -61,7 +61,6 @@ const sessionConfig = {
         expires: Date.now() + 1000 * 60 * 60,
         maxAge: 1000 * 60 * 60,
         secure: 'auto',
-        domain: process.env.NODE_ENV === 'production' ? 'https://mytunes.onrender.com' : undefined
     }
 }
 app.use(session(sessionConfig))
