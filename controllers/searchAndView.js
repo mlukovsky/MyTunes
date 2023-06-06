@@ -138,25 +138,25 @@ module.exports.getSearchResults = (req, res) => {
     if (!song && !artist && !album) { req.flash('error', 'You must fill in at least one of the fields') }
     switch (true) {
         case (song && !artist && !album):
-            url = `?q=${song.replaceAll(' ', '%20')}&type=track&limit=10&offset=0&market=US`
+            url = `?q=${song.replace(' ', '%20')}&type=track&limit=10&offset=0&market=US`
             break;
         case (artist && !song && !album):
-            url = `?q=${artist.replaceAll(' ', '%20')}&type=artist&limit=10&offset=0&market=US`
+            url = `?q=${artist.replace(' ', '%20')}&type=artist&limit=10&offset=0&market=US`
             break;
         case (album && !song && !artist):
-            url = `?q=${album.replaceAll(' ', '%20')}&type=album&limit=10&offset=0&market=US`
+            url = `?q=${album.replace(' ', '%20')}&type=album&limit=10&offset=0&market=US`
             break;
         case (song && artist && !album):
-            url = `?q=track:${song.replaceAll(' ', '%20')}+artist:${artist.replaceAll(' ', '%20')}&type=track,artist&limit=10&offset=0&market=US`
+            url = `?q=track:${song.replace(' ', '%20')}+artist:${artist.replace(' ', '%20')}&type=track,artist&limit=10&offset=0&market=US`
             break;
         case (song && album && !artist):
-            url = `?q=track:${song.replaceAll(' ', '%20')}+album:${album.replaceAll(' ', '%20')}&type=track,album&limit=10&offset=0&market=US`
+            url = `?q=track:${song.replace(' ', '%20')}+album:${album.replace(' ', '%20')}&type=track,album&limit=10&offset=0&market=US`
             break;
         case (artist && album && !song):
-            url = `?q=artist:${artist.replaceAll(' ', '%20')}+album:${album.replaceAll(' ', '%20')}&type=artist,album&limit=10&offset=0&market=US`
+            url = `?q=artist:${artist.replace(' ', '%20')}+album:${album.replace(' ', '%20')}&type=artist,album&limit=10&offset=0&market=US`
             break;
         default:
-            url = `?q=track:${song.replaceAll(' ', '%20')}+artist:${artist.replaceAll(' ', '%20')}+album:${album.replaceAll(' ', '%20')}&type=track,artist,album&limit=10&offset=0&market=US`
+            url = `?q=track:${song.replace(' ', '%20')}+artist:${artist.replace(' ', '%20')}+album:${album.replace(' ', '%20')}&type=track,artist,album&limit=10&offset=0&market=US`
     }
     axios({
         baseURL: 'https://api.spotify.com/v1/search',
