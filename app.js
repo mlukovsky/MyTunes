@@ -59,7 +59,9 @@ const sessionConfig = {
         httpOnly: true,
         //date.now gives milliseconds so this indicates that cookie will expire in one hour
         expires: Date.now() + 1000 * 60 * 60,
-        maxAge: 1000 * 60 * 60
+        maxAge: 1000 * 60 * 60,
+        secure: 'auto',
+        domain: process.env.NODE_ENV === 'production' ? 'https://mytunes.onrender.com' : undefined
     }
 }
 app.use(session(sessionConfig))
