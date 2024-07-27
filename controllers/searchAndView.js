@@ -10,19 +10,20 @@ const results = {
     ids: []
 };
 
-const monthMap = new Map();
-monthMap.set('01', 'January');
-monthMap.set('02', 'February');
-monthMap.set('03', 'March');
-monthMap.set('04', 'April');
-monthMap.set('05', 'May')
-monthMap.set('06', 'June')
-monthMap.set('07', 'July')
-monthMap.set('08', 'August')
-monthMap.set('09', 'September')
-monthMap.set('10', 'October')
-monthMap.set('11', 'November')
-monthMap.set('12', 'December')
+const monthMap = {
+    "01": "January",
+    "02": "February",
+    "03": "March",
+    "04": "April",
+    "05": "May",
+    "06": "June",
+    "07": "July",
+    "08": "August",
+    "09": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
+};
 
 const getToken = async () => {
     await axios({
@@ -234,7 +235,7 @@ module.exports.viewSong = async (req, res) => {
     }).then(function (response) {
         const data = response.data;
         const releaseDate = data.album.release_date;
-        const parsedDate = (data.album.release_date_precision === 'year') ? releaseDate : monthMap.get(releaseDate.substring(5, 7)) + ' ' + parseInt(releaseDate.substring(8, 10)) + ', ' + releaseDate.substring(0, 4)
+        const parsedDate = (data.album.release_date_precision === 'year') ? releaseDate : monthMap[releaseDate.substring(5, 7)] + ' ' + parseInt(releaseDate.substring(8, 10)) + ', ' + releaseDate.substring(0, 4)
         res.render('song/show', { data, parsedDate, reviews, reviewAverage, count, isFavorite })
     }).catch(function (err) {
         err.statusCode = 404;
@@ -273,7 +274,7 @@ module.exports.viewAlbum = async (req, res) => {
     }).then(function (response) {
         const data = response.data;
         const releaseDate = data.release_date;
-        const parsedDate = (data.release_date_precision === 'year') ? releaseDate : monthMap.get(releaseDate.substring(5, 7)) + ' ' + parseInt(releaseDate.substring(8, 10)) + ', ' + releaseDate.substring(0, 4)
+        const parsedDate = (data.release_date_precision === 'year') ? releaseDate : monthMap[releaseDate.substring(5, 7)] + ' ' + parseInt(releaseDate.substring(8, 10)) + ', ' + releaseDate.substring(0, 4)
         res.render('album/show', { data, parsedDate, reviews, reviewAverage, count, isFavorite })
     }).catch(function (err) {
         err.statusCode = 404;

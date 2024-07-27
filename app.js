@@ -84,7 +84,7 @@ app.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: [],
         connectSrc: ["'self'", "https://api.spotify.com/", "https://stats.g.doubleclick.net/j/"],
-        frameSrc: ["https://open.spotify.com/"],
+        frameSrc: ["https://open.spotify.com/", "https://embed-standalone.spotify.com/"],
         scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
         styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
         workerSrc: ["'self'", "blob:"],
